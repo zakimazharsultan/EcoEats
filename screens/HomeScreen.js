@@ -11,16 +11,119 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import React, { useEffect, useState, useCallback } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import Carousal from "../components/Carousal";
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Services from "../components/Services";
-import DressItem from "../components/DressItem";
+import FoodItem from "../components/FoodItem";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../ProductReducer";
 import { useNavigation } from "@react-navigation/native";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+
+const foodItems = [
+  {
+    id: 1,
+    name: "Egg",
+    added: 1689764776870,
+    expiry: 1689764776870 + 7 * 24 * 60 * 60 * 1000, // +7 days from now
+    calories: 68,
+    price: 0.15,
+    image: "https://bit.ly/3CxxkyZ",
+    category: "solid",
+  },
+  {
+    id: 2,
+    name: "Milk",
+    added: 1689764776870,
+    expiry: 1689764776870 + 14 * 24 * 60 * 60 * 1000, // +14 days from now
+    calories: 103,
+    price: 0.45,
+    image: "https://bit.ly/3kOPtRY",
+    category: "liquid",
+  },
+  {
+    id: 3,
+    name: "Apple",
+    added: 1689764776870,
+    expiry: 1689764776870 + 10 * 24 * 60 * 60 * 1000, // +10 days from now
+    calories: 52,
+    price: 0.25,
+    image: "https://bit.ly/2VfGcuh",
+    category: "solid",
+  },
+  {
+    id: 4,
+    name: "Bread",
+    added: 1689764776870,
+    expiry: 1689764776870 + 5 * 24 * 60 * 60 * 1000, // +5 days from now
+    calories: 79,
+    price: 1.00,
+    image: "https://bit.ly/2Vg6jjO",
+    category: "solid",
+  },
+  {
+    id: 5,
+    name: "Cheese",
+    added: 1689764776870,
+    expiry: 1689764776870 + 21 * 24 * 60 * 60 * 1000, // +21 days from now
+    calories: 402,
+    price: 0.70,
+    image: "https://bit.ly/3EzoTX6",
+    category: "solid",
+  },
+  {
+    id: 6,
+    name: "Orange Juice",
+    added: 1689764776870,
+    expiry: 1689764776870 + 30 * 24 * 60 * 60 * 1000, // +30 days from now
+    calories: 45,
+    price: 2.00,
+    image: "https://bit.ly/3qN31Tb",
+    category: "liquid",
+  },
+  {
+    id: 7,
+    name: "Yogurt",
+    added: 1689764776870,
+    expiry: 1689764776870 + 30 * 24 * 60 * 60 * 1000, // +30 days from now
+    calories: 59,
+    price: 0.50,
+    image: "https://bit.ly/3G1h4cq",
+    category: "solid",
+  },
+  {
+    id: 8,
+    name: "Chicken Breast",
+    added: 1689764776870,
+    expiry: 1689764776870 + 2 * 24 * 60 * 60 * 1000, // +2 days from now
+    calories: 165,
+    price: 3.00,
+    image: "https://bit.ly/3oPd0Ca",
+    category: "solid",
+  },
+  {
+    id: 9,
+    name: "Rice",
+    added: 1689764776870,
+    expiry: 1689764776870 + 365 * 24 * 60 * 60 * 1000, // +365 days from now
+    calories: 130,
+    price: 0.50,
+    image: "https://bit.ly/3z1QT80",
+    category: "solid",
+  },
+  {
+    id: 10,
+    name: "Spinach",
+    added: 1689764776870,
+    expiry: 1689764776870 + 5 * 24 * 60 * 60 * 1000, // +5 days from now
+    calories: 23,
+    price: 1.00,
+    image: "https://bit.ly/3GuoWzZ",
+    category: "solid",
+  }
+];
+
 
 const HomeScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -114,88 +217,38 @@ const HomeScreen = () => {
     fetchProducts();
   }, []);
 
-  const services = [
-    {
-      id: "0",
-      image: "https://cdn-icons-png.flaticon.com/128/4643/4643574.png",
-      name: "shirt",
-      quantity: 0,
-      price: 10,
-    },
-    {
-      id: "11",
-      image: "https://cdn-icons-png.flaticon.com/128/892/892458.png",
-      name: "T-shirt",
-      quantity: 0,
-      price: 10,
-    },
-    {
-      id: "12",
-      image: "https://cdn-icons-png.flaticon.com/128/9609/9609161.png",
-      name: "dresses",
-      quantity: 0,
-      price: 10,
-    },
-    {
-      id: "13",
-      image: "https://cdn-icons-png.flaticon.com/128/599/599388.png",
-      name: "jeans",
-      quantity: 0,
-      price: 10,
-    },
-    {
-      id: "14",
-      image: "https://cdn-icons-png.flaticon.com/128/9431/9431166.png",
-      name: "Sweater",
-      quantity: 0,
-      price: 10,
-    },
-    {
-      id: "15",
-      image: "https://cdn-icons-png.flaticon.com/128/3345/3345397.png",
-      name: "shorts",
-      quantity: 0,
-      price: 10,
-    },
-    {
-      id: "16",
-      image: "https://cdn-icons-png.flaticon.com/128/293/293241.png",
-      name: "Sleeveless",
-      quantity: 0,
-      price: 10,
-    },
-  ];
 
   return (
     <>
+      <SafeAreaView
+        style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10, backgroundColor: "#adf7cd" }}
+      >
+        <View>
+          <Image source={require('../assets/phool.png')} style={{ width: 50, height: 55, marginLeft: 5 }} />
+        </View>
+        <Text style={{ fontSize: 25, fontWeight: "bold", color: "#4acdcd" }}>
+          Available Food Stock
+        </Text>
+        <Pressable
+          onPress={() => navigation.navigate("Profile")}
+          style={{ marginRight: 5 }}
+        >
+          <Image
+            style={{ width: 40, height: 40, borderRadius: 20 }}
+            source={{
+              uri: "https://lh3.google.com/u/0/ogw/AGvuzYYgaacrw17YS1gPAV5d67jEPZd_QT7OCc1DqtUr=s32-c-mo",
+            }}
+          ></Image>
+        </Pressable>
+      </SafeAreaView>
       <ScrollView
-        style={{ backgroundColor: "#f0f0f0", flex: 1, marginTop: 50 }}
+        style={{ backgroundColor: "#e1f5ea", flex: 1 }}
       >
         {/* Location and Profile */}
-        <View
-          style={{ flexDirection: "row", alignItems: "center", padding: 10 }}
-        >
-          <MaterialIcons name="location-on" size={30} color="#fd5c63" />
-          <View>
-            <Text style={{ fontSize: 18, fontWeight: 600 }}>Home</Text>
-            <Text>{displayCurrentAddress}</Text>
-          </View>
 
-          <Pressable
-            onPress={() => navigation.navigate("Profile")}
-            style={{ marginLeft: "auto", marginRight: 7 }}
-          >
-            <Image
-              style={{ width: 40, height: 40, borderRadius: 20 }}
-              source={{
-                uri: "https://lh3.google.com/u/0/ogw/AGvuzYYgaacrw17YS1gPAV5d67jEPZd_QT7OCc1DqtUr=s32-c-mo",
-              }}
-            ></Image>
-          </Pressable>
-        </View>
 
         {/* Search Bar */}
-        <View
+        {/* <View
           style={{
             padding: 10,
             margin: 10,
@@ -209,56 +262,60 @@ const HomeScreen = () => {
         >
           <TextInput placeholder="Search for items" />
           <Feather name="search" size={24} color="#fd5c63" />
-        </View>
+        </View> */}
 
-        {/* Image Carousal */}
-        <Carousal />
 
         {/* Services component */}
-        <Services />
+        {/* <Services /> */}
 
         {/* Render all the producs */}
-        {product.map((item, index) => (
-          <DressItem item={item} key={index} />
+        {foodItems.map((item, index) => (
+          <FoodItem item={item} key={index} />
         ))}
       </ScrollView>
 
-      {total === 0 ? null : (
+
+
+      <View
+        style={{
+          margin: 5,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Pressable
           style={{
-            backgroundColor: "#088f8f",
-            padding: 10,
-            marginBotton: 30,
-            margin: 15,
-            borderRadius: 7,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
+            backgroundColor: "#0fa6a6",
+            borderColor: "white",
+            borderWidth: 2,
+            padding: 15,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 10,
+            flex: 1,
           }}
+          // onPress={() => navigation.navigate("PickUp")}
         >
-          <View>
-            <Text style={{ fontSize: 17, fontWeight: "600", color: "white" }}>
-              {cart.length} items | $ {total}
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: "400",
-                color: "white",
-                marginVertical: 6,
-              }}
-            >
-              Extra charges may apply
-            </Text>
-          </View>
-
-          <Pressable onPress={() => navigation.navigate("PickUp")}>
-            <Text style={{ fontSize: 17, fontWeight: "600", color: "white" }}>
-              Proceed to pickup
-            </Text>
-          </Pressable>
+          <SimpleLineIcons name="basket" size={24} color="white" />
         </Pressable>
-      )}
+
+        <Pressable
+          style={{
+            backgroundColor: "#0fa6a6",
+            borderColor: "white",
+            borderWidth: 2,
+            padding: 15,
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 10,
+            flex: 1,
+          }}
+          // onPress={() => navigation.navigate("PickUp")}
+        >
+          <MaterialCommunityIcons name="silverware-fork-knife" size={24} color="white" />
+        </Pressable>
+      </View>
     </>
   );
 };

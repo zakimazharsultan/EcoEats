@@ -9,7 +9,7 @@ import { Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
-import { ActivityIndicator } from "react-native";
+import { ActivityIndicator, Image } from "react-native";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -66,14 +66,23 @@ const LoginScreen = () => {
               justifyContent: "center",
               alignItems: "center",
               marginTop: 100,
+            }}>
+
+            <Image source={require('../assets/logo.png')} style={{ width: 160, height: 120 }} />
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 20,
             }}
           >
             <Text
-              style={{ fontSize: 20, color: "#662d91", fontWeight: "bold" }}
+              style={{ fontSize: 20, fontWeight: "bold", color: "#4acdcd", }}
             >
               Sign In
             </Text>
-            <Text style={{ fontSize: 18, marginTop: 8, fontWeight: "600" }}>
+            <Text style={{ fontSize: 18, marginTop: 8, fontWeight: "600", color: "#4acdcd", }}>
               Sign in to your account
             </Text>
           </View>
@@ -83,13 +92,13 @@ const LoginScreen = () => {
               <MaterialCommunityIcons
                 name="email-outline"
                 size={24}
-                color="black"
+                color={"#4acdcd"}
               />
               <TextInput
                 placeholder="Email"
                 value={email}
                 onChangeText={(text) => setEmail(text)}
-                placeholderTextColor={"black"}
+                placeholderTextColor={"#1e546b"}
                 style={{
                   fontSize: email ? 18 : 18,
                   borderBottomWidth: 1,
@@ -108,13 +117,13 @@ const LoginScreen = () => {
                 marginTop: 10,
               }}
             >
-              <Ionicons name="key-outline" size={24} color="black" />
+              <Ionicons name="key-outline" size={24} color={"#4acdcd"} />
               <TextInput
                 value={password}
                 onChangeText={(text) => setPassword(text)}
                 secureTextEntry={true}
                 placeholder="Password"
-                placeholderTextColor={"black"}
+                placeholderTextColor={"#1e546b"}
                 style={{
                   fontSize: password ? 18 : 18,
                   borderBottomWidth: 1,
@@ -145,21 +154,39 @@ const LoginScreen = () => {
               </Text>
             </Pressable>
 
-            <Pressable
-              onPress={() => navigation.navigate("Register")}
-              style={{ marginTop: 20 }}
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                marginTop: 20,
+              }}
             >
               <Text
                 style={{
-                  textAlign: "center",
+                  textAlign: 'center',
                   fontSize: 17,
-                  color: "gray",
-                  fontWeight: "500",
+                  color: 'black',
+                  fontWeight: '500',
                 }}
               >
-                Don't have a account? Sign Up
+                Don't have an account?
               </Text>
-            </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate('Register')}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 17,
+                    color: 'blue',
+                    fontWeight: '500',
+                    marginLeft: 5,
+                  }}
+                >
+                  Sign Up
+                </Text>
+              </Pressable>
+            </View>
           </View>
         </KeyboardAvoidingView>
       )}

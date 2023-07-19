@@ -8,7 +8,7 @@ import {
 } from "../CartReducer";
 import { decrementQty, incrementQty } from "../ProductReducer";
 
-const DressItem = ({ item }) => {
+const FoodItem = ({ item }) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const addItemToCart = () => {
@@ -155,6 +155,6 @@ const DressItem = ({ item }) => {
   );
 };
 
-export default DressItem;
+export default FoodItem;
 
 const styles = StyleSheet.create({});

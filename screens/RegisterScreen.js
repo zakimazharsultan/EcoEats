@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAvoidingView } from "react-native";
+import { KeyboardAvoidingView, Image } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -62,12 +62,21 @@ const RegisterScreen = () => {
             justifyContent: "center",
             alignItems: "center",
             marginTop: 100,
+          }}>
+
+          <Image source={require('../assets/logo.png')} style={{ width: 160, height: 120 }} />
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: 20,
           }}
         >
-          <Text style={{ fontSize: 20, color: "#662d91", fontWeight: "bold" }}>
+          <Text style={{ fontSize: 20, color: "#4acdcd", fontWeight: "bold" }}>
             Register
           </Text>
-          <Text style={{ fontSize: 18, marginTop: 8, fontWeight: "600" }}>
+          <Text style={{ fontSize: 18, marginTop: 8, fontWeight: '500', color: "#4acdcd"  }}>
             Create a new Account
           </Text>
         </View>
@@ -77,13 +86,13 @@ const RegisterScreen = () => {
             <MaterialCommunityIcons
               name="email-outline"
               size={24}
-              color="black"
+              color={"#4acdcd"}
             />
             <TextInput
               placeholder="Email"
               value={email}
               onChangeText={(text) => setEmail(text)}
-              placeholderTextColor={"black"}
+              placeholderTextColor={"#1e546b"}
               style={{
                 fontSize: email ? 18 : 18,
                 borderBottomWidth: 1,
@@ -102,13 +111,13 @@ const RegisterScreen = () => {
               marginTop: 10,
             }}
           >
-            <Ionicons name="key-outline" size={24} color="black" />
+            <Ionicons name="key-outline" size={24} color={"#4acdcd"} />
             <TextInput
               value={password}
               onChangeText={(text) => setPassword(text)}
               secureTextEntry={true}
               placeholder="Password"
-              placeholderTextColor={"black"}
+              placeholderTextColor={"#1e546b"}
               style={{
                 fontSize: password ? 18 : 18,
                 borderBottomWidth: 1,
@@ -127,12 +136,12 @@ const RegisterScreen = () => {
               marginTop: 10,
             }}
           >
-            <Feather name="phone" size={24} color="black" />
+            <Feather name="phone" size={24} color="#4acdcd" />
             <TextInput
               value={phone}
               onChangeText={(text) => setPhone(text)}
               placeholder="Phone No"
-              placeholderTextColor={"black"}
+              placeholderTextColor={"#1e546b"}
               style={{
                 fontSize: phone ? 18 : 18,
                 borderBottomWidth: 1,
@@ -161,21 +170,39 @@ const RegisterScreen = () => {
             </Text>
           </Pressable>
 
-          <Pressable
-            onPress={() => navigation.goBack()}
-            style={{ marginTop: 20 }}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginTop: 20,
+            }}
           >
             <Text
               style={{
-                textAlign: "center",
+                textAlign: 'center',
                 fontSize: 17,
-                color: "gray",
-                fontWeight: "500",
+                color: 'black',
+                fontWeight: '500',
               }}
             >
-              Already have an Account? Sign In
+              Already have an account?
             </Text>
-          </Pressable>
+            <Pressable
+              onPress={() => navigation.goBack()}
+            >
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 17,
+                  color: 'blue',
+                  fontWeight: '500',
+                  marginLeft: 5,
+                }}
+              >
+                Sign In
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
