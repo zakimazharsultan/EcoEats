@@ -11,14 +11,16 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import React, { useEffect, useState, useCallback } from "react";
-import { SimpleLineIcons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Services from "../components/Services";
 import FoodItem from "../components/FoodItem";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../ProductReducer";
 import { useNavigation } from "@react-navigation/native";
+import { Fontisto } from "@expo/vector-icons";
 import { collection, getDocs } from "firebase/firestore";
+import { Entypo } from "@expo/vector-icons";
 import { db } from "../firebase";
 
 const foodItems = [
@@ -29,8 +31,9 @@ const foodItems = [
     expiry: 1689764776870 + 7 * 24 * 60 * 60 * 1000, // +7 days from now
     calories: 68,
     price: 0.15,
-    image: "https://bit.ly/3CxxkyZ",
+    image: "https://cdn-icons-png.flaticon.com/128/528/528166.png",
     category: "solid",
+    quantity: 0,
   },
   {
     id: 2,
@@ -39,8 +42,9 @@ const foodItems = [
     expiry: 1689764776870 + 14 * 24 * 60 * 60 * 1000, // +14 days from now
     calories: 103,
     price: 0.45,
-    image: "https://bit.ly/3kOPtRY",
+    image: "https://cdn-icons-png.flaticon.com/128/869/869460.png",
     category: "liquid",
+    quantity: 0,
   },
   {
     id: 3,
@@ -49,8 +53,9 @@ const foodItems = [
     expiry: 1689764776870 + 10 * 24 * 60 * 60 * 1000, // +10 days from now
     calories: 52,
     price: 0.25,
-    image: "https://bit.ly/2VfGcuh",
+    image: "https://cdn-icons-png.flaticon.com/128/415/415733.png",
     category: "solid",
+    quantity: 0,
   },
   {
     id: 4,
@@ -58,9 +63,10 @@ const foodItems = [
     added: 1689764776870,
     expiry: 1689764776870 + 5 * 24 * 60 * 60 * 1000, // +5 days from now
     calories: 79,
-    price: 1.00,
-    image: "https://bit.ly/2Vg6jjO",
+    price: 1.0,
+    image: "https://cdn-icons-png.flaticon.com/128/7093/7093198.png",
     category: "solid",
+    quantity: 0,
   },
   {
     id: 5,
@@ -68,9 +74,10 @@ const foodItems = [
     added: 1689764776870,
     expiry: 1689764776870 + 21 * 24 * 60 * 60 * 1000, // +21 days from now
     calories: 402,
-    price: 0.70,
-    image: "https://bit.ly/3EzoTX6",
+    price: 0.7,
+    image: "https://cdn-icons-png.flaticon.com/128/7219/7219954.png",
     category: "solid",
+    quantity: 0,
   },
   {
     id: 6,
@@ -78,9 +85,10 @@ const foodItems = [
     added: 1689764776870,
     expiry: 1689764776870 + 30 * 24 * 60 * 60 * 1000, // +30 days from now
     calories: 45,
-    price: 2.00,
-    image: "https://bit.ly/3qN31Tb",
+    price: 2.0,
+    image: "https://cdn-icons-png.flaticon.com/128/2447/2447617.png",
     category: "liquid",
+    quantity: 0,
   },
   {
     id: 7,
@@ -88,9 +96,10 @@ const foodItems = [
     added: 1689764776870,
     expiry: 1689764776870 + 30 * 24 * 60 * 60 * 1000, // +30 days from now
     calories: 59,
-    price: 0.50,
-    image: "https://bit.ly/3G1h4cq",
+    price: 0.5,
+    image: "https://cdn-icons-png.flaticon.com/128/4934/4934066.png",
     category: "solid",
+    quantity: 0,
   },
   {
     id: 8,
@@ -98,9 +107,10 @@ const foodItems = [
     added: 1689764776870,
     expiry: 1689764776870 + 2 * 24 * 60 * 60 * 1000, // +2 days from now
     calories: 165,
-    price: 3.00,
-    image: "https://bit.ly/3oPd0Ca",
+    price: 3.0,
+    image: "https://cdn-icons-png.flaticon.com/128/5572/5572000.png",
     category: "solid",
+    quantity: 0,
   },
   {
     id: 9,
@@ -108,9 +118,10 @@ const foodItems = [
     added: 1689764776870,
     expiry: 1689764776870 + 365 * 24 * 60 * 60 * 1000, // +365 days from now
     calories: 130,
-    price: 0.50,
-    image: "https://bit.ly/3z1QT80",
+    price: 0.5,
+    image: "https://cdn-icons-png.flaticon.com/128/9873/9873609.png",
     category: "solid",
+    quantity: 0,
   },
   {
     id: 10,
@@ -118,12 +129,12 @@ const foodItems = [
     added: 1689764776870,
     expiry: 1689764776870 + 5 * 24 * 60 * 60 * 1000, // +5 days from now
     calories: 23,
-    price: 1.00,
-    image: "https://bit.ly/3GuoWzZ",
+    price: 1.0,
+    image: "https://cdn-icons-png.flaticon.com/128/8945/8945305.png",
     category: "solid",
-  }
+    quantity: 0,
+  },
 ];
-
 
 const HomeScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -217,14 +228,22 @@ const HomeScreen = () => {
     fetchProducts();
   }, []);
 
-
   return (
     <>
       <SafeAreaView
-        style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10, backgroundColor: "#adf7cd" }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: 10,
+          backgroundColor: "#adf7cd",
+        }}
       >
         <View>
-          <Image source={require('../assets/phool.png')} style={{ width: 50, height: 55, marginLeft: 5 }} />
+          <Image
+            source={require("../assets/phool.png")}
+            style={{ width: 50, height: 55, marginLeft: 5 }}
+          />
         </View>
         <Text style={{ fontSize: 25, fontWeight: "bold", color: "#4acdcd" }}>
           Available Food Stock
@@ -241,11 +260,8 @@ const HomeScreen = () => {
           ></Image>
         </Pressable>
       </SafeAreaView>
-      <ScrollView
-        style={{ backgroundColor: "#e1f5ea", flex: 1 }}
-      >
+      <ScrollView style={{ backgroundColor: "#e1f5ea", flex: 1 }}>
         {/* Location and Profile */}
-
 
         {/* Search Bar */}
         {/* <View
@@ -264,7 +280,6 @@ const HomeScreen = () => {
           <Feather name="search" size={24} color="#fd5c63" />
         </View> */}
 
-
         {/* Services component */}
         {/* <Services /> */}
 
@@ -272,9 +287,35 @@ const HomeScreen = () => {
         {foodItems.map((item, index) => (
           <FoodItem item={item} key={index} />
         ))}
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            margin: 14,
+          }}
+        >
+          <View>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>Add Items</Text>
+          </View>
+          <View>
+            <Entypo name="arrow-long-right" size={24} color="black" />
+          </View>
+          <Pressable
+            style={{
+              backgroundColor: "#088F8F",
+              width: 60,
+              height: 60,
+              borderRadius: 30,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Fontisto name="shopping-basket-add" size={24} color="white" />
+          </Pressable>
+        </View>
       </ScrollView>
-
-
 
       <View
         style={{
@@ -290,8 +331,8 @@ const HomeScreen = () => {
             borderColor: "white",
             borderWidth: 2,
             padding: 15,
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             borderRadius: 10,
             flex: 1,
           }}
@@ -306,14 +347,18 @@ const HomeScreen = () => {
             borderColor: "white",
             borderWidth: 2,
             padding: 15,
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             borderRadius: 10,
             flex: 1,
           }}
           // onPress={() => navigation.navigate("PickUp")}
         >
-          <MaterialCommunityIcons name="silverware-fork-knife" size={24} color="white" />
+          <MaterialCommunityIcons
+            name="silverware-fork-knife"
+            size={24}
+            color="white"
+          />
         </Pressable>
       </View>
     </>

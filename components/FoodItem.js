@@ -23,14 +23,14 @@ const FoodItem = ({ item }) => {
           borderRadius: 8,
           padding: 10,
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "space-evenly",
           margin: 14,
           flexDirection: "row",
         }}
       >
         <View>
           <Image
-            style={{ width: 70, height: 70 }}
+            style={{ width: 50, height: 50 }}
             source={{ uri: item.image }}
           />
         </View>
@@ -42,16 +42,133 @@ const FoodItem = ({ item }) => {
               fontSize: 17,
               fontWeight: "600",
               marginBottom: 7,
+              marginLeft: 10,
             }}
           >
             {item.name}
           </Text>
-          <Text style={{ width: 60, color: "gray", fontSize: 15 }}>
-            ${item.price}
+          <Text
+            style={{ marginLeft: 10, width: 60, color: "gray", fontSize: 15 }}
+          >
+            £ {item.price}
           </Text>
         </View>
 
-        {cart.some((c) => c.id === item.id) ? (
+        <View>
+          <Text
+            style={{
+              width: 83,
+              fontSize: 12,
+              fontWeight: "600",
+              marginBottom: 7,
+            }}
+          >
+            Calories: {item.calories} kcal
+          </Text>
+
+          <Text style={{ width: 60, color: "gray", fontSize: 10 }}>
+            Expiry:{item.expiry}
+          </Text>
+        </View>
+
+        <Pressable
+          style={{
+            flexDirection: "row",
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+          }}
+        >
+          {/* this is the '-' button */}
+          <Pressable
+            onPress={() => {
+              item.quantity--;
+              // dispatch(decrementQuantity(item)); // cart
+              // dispatch(decrementQty(item)); // product
+            }}
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: 13,
+              borderColor: "#BEBEBE",
+              backgroundColor: "#E0E0E0",
+              justifyContent: "center",
+              alignContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                color: "#088F8F",
+                paddingHorizontal: 6,
+                fontWeight: "600",
+                textAlign: "center",
+              }}
+            >
+              -
+            </Text>
+          </Pressable>
+
+          {/* this shows the quantity */}
+          {item.category === "liquid" ? (
+            <Pressable>
+              <Text
+                style={{
+                  fontSize: 19,
+                  color: "#088F8F",
+                  paddingHorizontal: 8,
+                  fontWeight: "600",
+                }}
+              >
+                {item.quantity}L
+              </Text>
+            </Pressable>
+          ) : (
+            <Pressable>
+              <Text
+                style={{
+                  fontSize: 19,
+                  color: "#088F8F",
+                  paddingHorizontal: 8,
+                  fontWeight: "600",
+                }}
+              >
+                {item.quantity}
+              </Text>
+            </Pressable>
+          )}
+
+          {/* this is the '+' button */}
+          <Pressable
+            onPress={() => {
+              item.quantity++;
+              // dispatch(incrementQuantity(item)); // cart
+              // dispatch(incrementQty(item)); //product
+            }}
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: 13,
+              borderColor: "#BEBEBE",
+              backgroundColor: "#E0E0E0",
+              justifyContent: "center",
+              alignContent: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                color: "#088F8F",
+                paddingHorizontal: 6,
+                fontWeight: "600",
+                textAlign: "center",
+              }}
+            >
+              +
+            </Text>
+          </Pressable>
+        </Pressable>
+
+        {/* {cart.some((c) => c.id === item.id) ? (
           <Pressable
             style={{
               flexDirection: "row",
@@ -59,7 +176,7 @@ const FoodItem = ({ item }) => {
               paddingVertical: 5,
             }}
           >
-            {/* this is the '-' button */}
+
             <Pressable
               onPress={() => {
                 dispatch(decrementQuantity(item)); // cart
@@ -88,7 +205,7 @@ const FoodItem = ({ item }) => {
               </Text>
             </Pressable>
 
-            {/* this shows the quantity */}
+
             <Pressable>
               <Text
                 style={{
@@ -102,7 +219,7 @@ const FoodItem = ({ item }) => {
               </Text>
             </Pressable>
 
-            {/* this is the '+' button */}
+
             <Pressable
               onPress={() => {
                 dispatch(incrementQuantity(item)); // cart
@@ -149,7 +266,7 @@ const FoodItem = ({ item }) => {
               Add
             </Text>
           </Pressable>
-        )}
+        )} */}
       </Pressable>
     </View>
   );
