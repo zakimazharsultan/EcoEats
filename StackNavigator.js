@@ -9,6 +9,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import OrderScreen from "./screens/OrderScreen";
+import AddItemScreen from "./screens/AddItemScreen";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -48,6 +49,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Order"
           component={OrderScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddItem"
+          component={AddItemScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

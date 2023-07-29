@@ -311,6 +311,7 @@ const HomeScreen = () => {
               justifyContent: "center",
               alignItems: "center",
             }}
+            onPress={() => navigation.navigate("AddItem")}
           >
             <Fontisto name="shopping-basket-add" size={24} color="white" />
           </Pressable>
