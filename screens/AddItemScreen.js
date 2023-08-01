@@ -10,46 +10,78 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import React, { useState } from "react";
-import { DateTimePicker } from "@react-native-community/datetimepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { auth } from "../firebase";
+import { useNavigation } from "@react-navigation/native";
+import Toast from 'react-native-toast-message';
+import { db } from "../firebase";
 
 const AddItemScreen = () => {
+  const user = auth.currentUser;
+  const navigation = useNavigation();
   const categories = [
     { label: "Solid", value: "s" },
     { label: "Liquid", value: "l" },
-    { label: "Weight", value: "w" },
+    { label: "Dry", value: "w" },
   ];
-
+  const newDate = new Date();
+  const expiryDate = newDate.setDate(newDate.getDate() + 3);
   const [value, setValue] = useState(null);
   const [name, setName] = useState("");
-  const [addDate, setAddDate] = useState(new Date());
-  const [expTime, setExpTime] = useState(new Date());
+  const [expTime, setExpTime] = useState(new Date(expiryDate));
   const [calories, setCalories] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [showPicker, setShowPicker] = useState(false);
+  const [image, setImage] = useState("https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png");
+  const [quantity, setQuantity] = useState(1);
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
   };
 
   const onChange = ({ type }, selectedDate) => {
+    // console.log('on Change:', selectedDate, 'type:', type);
     if (type == "set") {
       const currentDate = selectedDate;
-      setDate(currentDate);
-    } else {
-      toggleDatePicker();
+      setExpTime(currentDate);
+      setShowPicker(false)
     }
+
   };
 
   const clear = () => {
     setName("");
-    setExpTime("");
+    setExpTime(expiryDate);
     setCalories("");
     setPrice("");
     setCategory("");
   };
+
+  const saveFoodItem = async () => {
+    console.log('saving food item')
+    const newFoodItem = {
+      name: name,
+      expiry: expTime,
+      calories: calories,
+      price: price,
+      category: value,
+      image: image,
+      quantity: quantity,
+      added: serverTimestamp(),
+    };
+    console.log(newFoodItem);
+    const foodItems = await addDoc(collection(db, 'users', user?.email, 'foodItems'), newFoodItem)
+    Toast.show({
+      type: 'success',
+      position: 'top',
+      text1: 'Success',
+      text2: 'Food item added successfully',
+    })
+  }
 
   return (
     <>
@@ -117,25 +149,17 @@ const AddItemScreen = () => {
             color={"#4acdcd"}
           />
 
-          {showPicker && (
-            <DateTimePicker
-              mode="date"
-              display="spinner"
-              value={addDate}
-              onChange={onChange}
-            />
-          )}
-
-          {!showPicker && (
-            <Pressable onPress={toggleDatePicker}>
+          {showPicker ? (
+            <>
               <TextInput
-                placeholder="Added Date"
-                value={addDate}
-                onChangeText={setAddDate}
+                placeholder="Expiry"
+                value={expTime.toDateString()}
+                onChangeText={setExpTime}
                 placeholderTextColor={"#1e546b"}
                 editable={false}
                 style={{
-                  fontSize: addDate ? 18 : 18,
+                  color: "#1e546b",
+                  fontSize: expTime ? 18 : 18,
                   borderBottomWidth: 1,
                   borderBottomColor: "gray",
                   marginLeft: 13,
@@ -143,8 +167,35 @@ const AddItemScreen = () => {
                   width: 300,
                 }}
               />
-            </Pressable>
-          )}
+              <DateTimePicker
+                mode="date"
+                display="spinner"
+                value={expTime}
+                onChange={onChange}
+                minimumDate={new Date()}
+
+              />
+            </>
+          ) :
+            <Pressable onPress={(toggleDatePicker)}>
+              <TextInput
+                placeholder="Expiry"
+                value={expTime.toDateString()}
+                onChangeText={setExpTime}
+                placeholderTextColor={"#1e546b"}
+                editable={false}
+                style={{
+                  color: "#1e546b",
+                  fontSize: expTime ? 18 : 18,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "gray",
+                  marginLeft: 13,
+                  marginVertical: 10,
+                  width: 300,
+                }}
+              />
+            </Pressable>}
+
         </View>
         <View
           style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
@@ -155,33 +206,11 @@ const AddItemScreen = () => {
             color={"#4acdcd"}
           />
           <TextInput
-            placeholder="Expiry Time"
-            value={expTime}
-            onChangeText={(text) => setExpTime(text)}
-            placeholderTextColor={"#1e546b"}
-            style={{
-              fontSize: expTime ? 18 : 18,
-              borderBottomWidth: 1,
-              borderBottomColor: "gray",
-              marginLeft: 13,
-              marginVertical: 10,
-              width: 300,
-            }}
-          />
-        </View>
-        <View
-          style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
-        >
-          <MaterialCommunityIcons
-            name="email-outline"
-            size={24}
-            color={"#4acdcd"}
-          />
-          <TextInput
-            placeholder="Calories"
+            placeholder="Calories (kCal)"
             value={calories}
             onChangeText={(text) => setCalories(text)}
             placeholderTextColor={"#1e546b"}
+            keyboardType="numeric"
             style={{
               fontSize: calories ? 18 : 18,
               borderBottomWidth: 1,
@@ -201,10 +230,11 @@ const AddItemScreen = () => {
             color={"#4acdcd"}
           />
           <TextInput
-            placeholder="Price"
+            placeholder="Price £"
             value={price}
             onChangeText={(text) => setPrice(text)}
             placeholderTextColor={"#1e546b"}
+            keyboardType="numeric"
             style={{
               fontSize: price ? 18 : 18,
               borderBottomWidth: 1,
@@ -290,20 +320,22 @@ const AddItemScreen = () => {
           <Pressable
             style={{
               width: 150,
-              backgroundColor: "#318CE7",
+              backgroundColor: (name === "" || expTime === "" || calories === "" || price === "" || category === "") ? "grey" : "#318CE7",
               padding: 15,
               borderRadius: 7,
               marginTop: 40,
               marginLeft: "auto",
               marginRight: "auto",
             }}
+            // disabled={name === "" || expTime === "" || calories === "" || price === "" || category === ""}
+            onPress={saveFoodItem}
           >
             <Text style={{ fontSize: 18, textAlign: "center", color: "white" }}>
               Add
             </Text>
           </Pressable>
         </View>
-      </KeyboardAvoidingView>
+      </KeyboardAvoidingView >
     </>
   );
 };
