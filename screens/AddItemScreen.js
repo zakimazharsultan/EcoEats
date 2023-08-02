@@ -29,7 +29,7 @@ const AddItemScreen = () => {
     { label: "Dry", value: "w" },
   ];
   const newDate = new Date();
-  const expiryDate = newDate.setDate(newDate.getDate() + 3);
+  const expiryDate = newDate.setDate(newDate.getDate() + 1);
   const [value, setValue] = useState(null);
   const [name, setName] = useState("");
   const [expTime, setExpTime] = useState(new Date(expiryDate));
@@ -75,6 +75,7 @@ const AddItemScreen = () => {
     };
     console.log(newFoodItem);
     const foodItems = await addDoc(collection(db, 'users', user?.email, 'foodItems'), newFoodItem)
+    console.log('food item added', foodItems.id)
     Toast.show({
       type: 'success',
       position: 'top',

@@ -15,6 +15,10 @@ const FoodItem = ({ item }) => {
     dispatch(addToCart(item)); //cart
     dispatch(incrementQty(item)); //product
   };
+  const expiryTimestamp = item.expiry.seconds * 1000;  // Convert to milliseconds
+  const expiryDate = new Date(expiryTimestamp);
+  const readableExpiryDate = expiryDate.toLocaleDateString();
+  const readableExpiryTime = expiryDate.toLocaleTimeString();
   return (
     <View>
       <Pressable
@@ -67,7 +71,7 @@ const FoodItem = ({ item }) => {
           </Text>
 
           <Text style={{ width: 60, color: "gray", fontSize: 10 }}>
-            Expiry:{item.expiry}
+            Expiry Date: {readableExpiryDate}
           </Text>
         </View>
 
