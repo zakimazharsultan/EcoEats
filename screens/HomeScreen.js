@@ -25,8 +25,6 @@ import { db } from "../firebase";
 import { foodItems } from "../utils/foodItems";
 import { getFoodItems } from "../utils/firebaseAPIcalls";
 
-
-
 const HomeScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
   const [items, setItems] = useState([]);
@@ -37,7 +35,6 @@ const HomeScreen = () => {
     .reduce((curr, prev) => curr + prev, 0);
 
   const navigation = useNavigation();
-
 
   const [displayCurrentAddress, setdisplayCurrentAddress] = useState(
     "We are loading your location"
@@ -110,11 +107,10 @@ const HomeScreen = () => {
       const items = await getFoodItems();
       setFoodItemsDB(items);
       setLoading(false);
-    }
+    };
 
     fetchFoodItems();
   }, []);
-
 
   return (
     <>
@@ -172,11 +168,11 @@ const HomeScreen = () => {
         {/* <Services /> */}
 
         {/* Render all the producs */}
-        {/* {foodItems.map((item, index) => (
+        {foodItems.map((item, index) => (
           <FoodItem item={item} key={index} />
-        ))} */}
+        ))}
 
-        {
+        {/* {
 
           loading ? <Text style={{ fontSize: 25, fontWeight: "bold", color: "#4acdcd" }}>
             Loading
@@ -185,7 +181,7 @@ const HomeScreen = () => {
             <FoodItem item={item} key={index} />
           )
           )
-        }
+        } */}
 
         <View
           style={{
@@ -236,7 +232,7 @@ const HomeScreen = () => {
             borderRadius: 10,
             flex: 1,
           }}
-        // onPress={() => navigation.navigate("PickUp")}
+          // onPress={() => navigation.navigate("PickUp")}
         >
           <SimpleLineIcons name="basket" size={24} color="white" />
         </Pressable>
@@ -253,8 +249,7 @@ const HomeScreen = () => {
             flex: 1,
           }}
           onPress={() => {
-            console.log(foodItemsDB)
-
+            console.log(foodItemsDB);
           }}
         >
           <MaterialCommunityIcons

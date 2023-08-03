@@ -15,7 +15,7 @@ const FoodItem = ({ item }) => {
     dispatch(addToCart(item)); //cart
     dispatch(incrementQty(item)); //product
   };
-  const expiryTimestamp = item.expiry.seconds * 1000;  // Convert to milliseconds
+  const expiryTimestamp = item.expiry.seconds * 1000; // Convert to milliseconds
   const expiryDate = new Date(expiryTimestamp);
   const readableExpiryDate = expiryDate.toLocaleDateString();
   const readableExpiryTime = expiryDate.toLocaleTimeString();
@@ -172,105 +172,36 @@ const FoodItem = ({ item }) => {
           </Pressable>
         </Pressable>
 
-        {/* {cart.some((c) => c.id === item.id) ? (
+        <Pressable>
           <Pressable
+            onPress={() => {
+              alert("Remove it");
+            }}
             style={{
-              flexDirection: "row",
-              paddingHorizontal: 10,
-              paddingVertical: 5,
+              width: 20,
+              height: 20,
+              bottom: "45%",
+              borderRadius: 13,
+              borderColor: "black",
+              backgroundColor: "red",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-
-            <Pressable
-              onPress={() => {
-                dispatch(decrementQuantity(item)); // cart
-                dispatch(decrementQty(item)); // product
-              }}
-              style={{
-                width: 26,
-                height: 26,
-                borderRadius: 13,
-                borderColor: "#BEBEBE",
-                backgroundColor: "#E0E0E0",
-                justifyContent: "center",
-                alignContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: "#088F8F",
-                  paddingHorizontal: 6,
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
-                -
-              </Text>
-            </Pressable>
-
-
-            <Pressable>
-              <Text
-                style={{
-                  fontSize: 19,
-                  color: "#088F8F",
-                  paddingHorizontal: 8,
-                  fontWeight: "600",
-                }}
-              >
-                {item.quantity}
-              </Text>
-            </Pressable>
-
-
-            <Pressable
-              onPress={() => {
-                dispatch(incrementQuantity(item)); // cart
-                dispatch(incrementQty(item)); //product
-              }}
-              style={{
-                width: 26,
-                height: 26,
-                borderRadius: 13,
-                borderColor: "#BEBEBE",
-                backgroundColor: "#E0E0E0",
-                justifyContent: "center",
-                alignContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: "#088F8F",
-                  paddingHorizontal: 6,
-                  fontWeight: "600",
-                  textAlign: "center",
-                }}
-              >
-                +
-              </Text>
-            </Pressable>
-          </Pressable>
-        ) : (
-          <Pressable onPress={addItemToCart} style={{ width: 80 }}>
             <Text
               style={{
-                borderColor: "gray",
-                borderRadius: 4,
-                borderWidth: 0.8,
-                marginVertical: 10,
-                color: "#088F8F",
+                fontSize: 20,
+                bottom: "20%",
+                color: "white",
+                paddingHorizontal: 6,
+                fontWeight: "600",
                 textAlign: "center",
-                padding: 5,
-                fontSize: 17,
-                fontWeight: "bold",
               }}
             >
-              Add
+              -
             </Text>
           </Pressable>
-        )} */}
+        </Pressable>
       </Pressable>
     </View>
   );
