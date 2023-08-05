@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addToCart,
@@ -188,18 +189,7 @@ const FoodItem = ({ item }) => {
               alignItems: "center",
             }}
           >
-            <Text
-              style={{
-                fontSize: 20,
-                bottom: "20%",
-                color: "white",
-                paddingHorizontal: 6,
-                fontWeight: "600",
-                textAlign: "center",
-              }}
-            >
-              -
-            </Text>
+            <Ionicons name="trash-bin" size={15} color="white" />
           </Pressable>
         </Pressable>
       </Pressable>

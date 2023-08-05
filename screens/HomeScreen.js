@@ -168,20 +168,17 @@ const HomeScreen = () => {
         {/* <Services /> */}
 
         {/* Render all the producs */}
-        {foodItems.map((item, index) => (
+        {/* {foodItems.map((item, index) => (
           <FoodItem item={item} key={index} />
-        ))}
+        ))} */}
 
-        {/* {
-
-          loading ? <Text style={{ fontSize: 25, fontWeight: "bold", color: "#4acdcd" }}>
+        {loading ? (
+          <Text style={{ fontSize: 25, fontWeight: "bold", color: "#4acdcd" }}>
             Loading
-          </Text> : foodItemsDB.map((item, index) =>
-          (
-            <FoodItem item={item} key={index} />
-          )
-          )
-        } */}
+          </Text>
+        ) : (
+          foodItemsDB.map((item, index) => <FoodItem item={item} key={index} />)
+        )}
 
         <View
           style={{
