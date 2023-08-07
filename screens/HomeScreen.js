@@ -18,13 +18,14 @@ import FoodItem from "../components/FoodItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Fontisto } from "@expo/vector-icons";
-import { doc, updateDoc, getDoc, increment } from "firebase/firestore";
+import { doc, updateDoc, getDoc, increment, deleteDoc } from "firebase/firestore";
 import { Entypo } from "@expo/vector-icons";
 import { db } from "../firebase";
 import { foodItems } from "../utils/foodItems";
 import { getFoodItems } from "../utils/firebaseAPIcalls";
 import { ActivityIndicator } from "react-native";
 import { auth } from "../firebase";
+import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -207,6 +208,24 @@ const HomeScreen = () => {
   //     }
   //   }
   // };
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchFoodItems = async () => {
+        setLoading(true);
+        const items = await getFoodItems();
+        setFoodItemsDB(items);
+        setLoading(false);
+      };
+
+      fetchFoodItems();
+
+      return () => {
+        // If you want to run any cleanup or another function when the screen goes out of focus
+
+      };
+    }, [])
+  );
+
   useEffect(() => {
     const fetchFoodItems = async () => {
       setLoading(true);
@@ -216,7 +235,7 @@ const HomeScreen = () => {
     };
 
     fetchFoodItems();
-  }, []);
+  }, [navigation]);
 
   return (
     <>

@@ -30,9 +30,10 @@ const AddItemScreen = () => {
   const user = auth.currentUser;
   const navigation = useNavigation();
   const categories = [
-    { label: "Solid", value: " " },
+    { label: "Fruits", value: " pcs" },
     { label: "Liquid", value: " ltr" },
-    { label: "Dry", value: " kg" },
+    { label: "Vegetables", value: " kg" },
+    { label: "Meat", value: " kg" },
   ];
   const newDate = new Date();
   const expiryDate = newDate.setDate(newDate.getDate() + 1);
@@ -93,7 +94,7 @@ const AddItemScreen = () => {
       text1: "Success",
       text2: "Food item added successfully",
     });
-    navigation.navigate("AddItem")
+    navigation.navigate("Home")
   };
 
   return (
@@ -261,7 +262,7 @@ const AddItemScreen = () => {
               maxHeight={300}
               labelField="label"
               valueField="value"
-              placeholder="Select Type"
+              placeholder="Select Category"
               value={category}
               onChange={(item) => {
                 setCategory(item.value);
