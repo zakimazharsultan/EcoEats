@@ -7,7 +7,12 @@ export const getFoodItems = async () => {
     const foodItemsCollection = collection(db, 'users', user?.email, 'foodItems');
     const foodItemsSnapshot = await getDocs(foodItemsCollection);
 
-    const foodItems = foodItemsSnapshot.docs.map(doc => doc.data());
+    const foodItems = foodItemsSnapshot.docs.map(doc => {
+        return {
+            id: doc.id,
+            ...doc.data()
+        };
+    });
 
     return foodItems;
 }

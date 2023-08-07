@@ -8,8 +8,10 @@ import {
   incrementQuantity,
 } from "../CartReducer";
 import { decrementQty, incrementQty } from "../ProductReducer";
+import QuantityComponent from "./QuantityComponent"
+import { Alert } from 'react-native';
 
-const FoodItem = ({ item }) => {
+const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem }) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const addItemToCart = () => {
@@ -76,107 +78,29 @@ const FoodItem = ({ item }) => {
           </Text>
         </View>
 
-        <Pressable
-          style={{
-            flexDirection: "row",
-            paddingHorizontal: 10,
-            paddingVertical: 5,
-          }}
-        >
-          {/* this is the '-' button */}
-          <Pressable
-            onPress={() => {
-              item.quantity--;
-              // dispatch(decrementQuantity(item)); // cart
-              // dispatch(decrementQty(item)); // product
-            }}
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: 13,
-              borderColor: "#BEBEBE",
-              backgroundColor: "#E0E0E0",
-              justifyContent: "center",
-              alignContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                color: "#088F8F",
-                paddingHorizontal: 6,
-                fontWeight: "600",
-                textAlign: "center",
-              }}
-            >
-              -
-            </Text>
-          </Pressable>
-
-          {/* this shows the quantity */}
-          {item.category === "liquid" ? (
-            <Pressable>
-              <Text
-                style={{
-                  fontSize: 19,
-                  color: "#088F8F",
-                  paddingHorizontal: 8,
-                  fontWeight: "600",
-                }}
-              >
-                {item.quantity}L
-              </Text>
-            </Pressable>
-          ) : (
-            <Pressable>
-              <Text
-                style={{
-                  fontSize: 19,
-                  color: "#088F8F",
-                  paddingHorizontal: 8,
-                  fontWeight: "600",
-                }}
-              >
-                {item.quantity}
-              </Text>
-            </Pressable>
-          )}
-
-          {/* this is the '+' button */}
-          <Pressable
-            onPress={() => {
-              item.quantity++;
-              // dispatch(incrementQuantity(item)); // cart
-              // dispatch(incrementQty(item)); //product
-            }}
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: 13,
-              borderColor: "#BEBEBE",
-              backgroundColor: "#E0E0E0",
-              justifyContent: "center",
-              alignContent: "center",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                color: "#088F8F",
-                paddingHorizontal: 6,
-                fontWeight: "600",
-                textAlign: "center",
-              }}
-            >
-              +
-            </Text>
-          </Pressable>
-        </Pressable>
+        <QuantityComponent itemCategory={item.category} itemQuantity={item.quantity} addFoodItemQuantity={addFoodItemQuantity} minusFoodItemQuantity={minusFoodItemQuantity} />
 
         <Pressable>
           <Pressable
             onPress={() => {
-              alert("Remove it");
+              Alert.alert(
+                "Delete Food Item",               // Alert title
+                "Are you sure you want to delete this food item?", // Alert message
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Deletion cancelled"),
+                    style: "cancel"
+                  },
+                  {
+                    text: "OK",
+                    onPress: async () => {
+                      deleteItem()
+                    }
+                  }
+                ],
+                { cancelable: false }  // If you tap outside the alert, it won't close
+              );
             }}
             style={{
               width: 20,

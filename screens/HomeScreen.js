@@ -18,23 +18,129 @@ import FoodItem from "../components/FoodItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Fontisto } from "@expo/vector-icons";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { doc, updateDoc, getDoc, increment } from "firebase/firestore";
 import { Entypo } from "@expo/vector-icons";
 import { db } from "../firebase";
 import { foodItems } from "../utils/foodItems";
 import { getFoodItems } from "../utils/firebaseAPIcalls";
 import { ActivityIndicator } from "react-native";
+import { auth } from "../firebase";
 
 const HomeScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [foodItemsDB, setFoodItemsDB] = useState([]);
+  const user = auth.currentUser;
   const total = cart
     .map((item) => item.quantity * item.price)
     .reduce((curr, prev) => curr + prev, 0);
 
   const navigation = useNavigation();
+
+  const addFoodItemQuantity = async (id) => {
+    try {
+      setFoodItemsDB(prevItems => {
+        // Find the index of the item with the specified ID
+        const index = prevItems.findIndex(item => item.id === id);
+
+        // If the item doesn't exist, just return the previous state
+        if (index === -1) return prevItems;
+
+        // Create a new array with updated quantity for the specified item
+        const newItems = [...prevItems];
+        newItems[index] = {
+          ...newItems[index],
+          quantity: newItems[index].quantity + 1
+        };
+        return newItems;
+      });
+      const foodItemRef = doc(db, "users", user?.email, "foodItems", id);
+
+      // You can use the `getDoc` function if you want to get the current quantity
+      // or perform other operations on the document before updating.
+      const foodItemSnap = await getDoc(foodItemRef);
+      if (!foodItemSnap.exists()) {
+        console.log("No such food item!");
+        return;
+      }
+
+      // Update the quantity field by incrementing it by 1
+      await updateDoc(foodItemRef, {
+        quantity: increment(1)
+      });
+
+      // console.log("Food item quantity increased by 1");
+
+      // const items = await getFoodItems();
+      // setFoodItemsDB(items);
+    } catch (error) {
+      console.error("Error updating quantity: ", error);
+    }
+    // console.log("adding to: ", id)
+
+  }
+
+  const minusFoodItemQuantity = async (id) => {
+    try {
+      setFoodItemsDB(prevItems => {
+        // Find the index of the item with the specified ID
+        const index = prevItems.findIndex(item => item.id === id);
+
+        // If the item doesn't exist, just return the previous state
+        if (index === -1) return prevItems;
+
+        // Create a new array with updated quantity for the specified item
+        const newItems = [...prevItems];
+        if (newItems[index].quantity > 1) {
+          newItems[index] = {
+            ...newItems[index],
+            quantity: newItems[index].quantity - 1
+          };
+        }
+
+        return newItems;
+      });
+      const foodItemRef = doc(db, "users", user?.email, "foodItems", id);
+
+      // You can use the `getDoc` function if you want to get the current quantity
+      // or perform other operations on the document before updating.
+      const foodItemSnap = await getDoc(foodItemRef);
+      if (!foodItemSnap.exists()) {
+        console.log("No such food item!");
+        return;
+      }
+
+      // Update the quantity field by incrementing it by 1
+      await updateDoc(foodItemRef, {
+        quantity: increment(-1)
+      });
+
+      // console.log("Food item quantity increased by 1");
+
+      // const items = await getFoodItems();
+      // setFoodItemsDB(items);
+    } catch (error) {
+      console.error("Error updating quantity: ", error);
+    }
+    // console.log("adding to: ", id)
+
+  }
+
+  const deleteItem = async (id) => {
+    setLoading(true)
+    try {
+      const foodItemRef = doc(db, "users", user?.email, "foodItems", id);
+
+      await deleteDoc(foodItemRef);
+
+      const items = await getFoodItems();
+      setFoodItemsDB(items);
+    } catch (error) {
+      console.error("Error deleting food item: ", error);
+    }
+    setLoading(false)
+  };
 
   // const [displayCurrentAddress, setdisplayCurrentAddress] = useState(
   //   "We are loading your location"
@@ -168,7 +274,10 @@ const HomeScreen = () => {
             <ActivityIndicator size={"large"} color={"red"} />
           </View>
         ) : (
-          foodItemsDB.map((item, index) => <FoodItem item={item} key={index} />)
+          foodItemsDB.map((item, index) => <FoodItem item={item} key={index} addFoodItemQuantity={() => { addFoodItemQuantity(item.id) }} deleteItem={() => { deleteItem(item.id) }} minusFoodItemQuantity={() => {
+            if (item.quantity > 1) minusFoodItemQuantity(item.id)
+            else return
+          }} />)
         )}
 
         <View
@@ -220,7 +329,7 @@ const HomeScreen = () => {
             borderRadius: 10,
             flex: 1,
           }}
-          // onPress={() => navigation.navigate("PickUp")}
+        // onPress={() => navigation.navigate("PickUp")}
         >
           <SimpleLineIcons name="basket" size={24} color="white" />
         </Pressable>

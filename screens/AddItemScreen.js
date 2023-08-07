@@ -24,14 +24,15 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import { Octicons } from "@expo/vector-icons";
 import { db } from "../firebase";
+import QuantityComponent from "../components/QuantityComponent";
 
 const AddItemScreen = () => {
   const user = auth.currentUser;
   const navigation = useNavigation();
   const categories = [
-    { label: "Solid", value: "s" },
-    { label: "Liquid", value: "l" },
-    { label: "Dry", value: "d" },
+    { label: "Solid", value: " " },
+    { label: "Liquid", value: " ltr" },
+    { label: "Dry", value: " kg" },
   ];
   const newDate = new Date();
   const expiryDate = newDate.setDate(newDate.getDate() + 1);
@@ -45,7 +46,7 @@ const AddItemScreen = () => {
   const [image, setImage] = useState(
     "https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png"
   );
-  const [quantity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState(1);
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
   };
@@ -64,6 +65,7 @@ const AddItemScreen = () => {
     setExpTime(new Date(expiryDate));
     setCalories("");
     setPrice("");
+    setQuantity(1)
     setCategory("");
   };
 
@@ -91,6 +93,7 @@ const AddItemScreen = () => {
       text1: "Success",
       text2: "Food item added successfully",
     });
+    navigation.navigate("AddItem")
   };
 
   return (
@@ -259,9 +262,9 @@ const AddItemScreen = () => {
               labelField="label"
               valueField="value"
               placeholder="Select Type"
-              value={value}
+              value={category}
               onChange={(item) => {
-                setValue(item.value);
+                setCategory(item.value);
               }}
               renderLeftIcon={() => (
                 <Feather
@@ -272,29 +275,9 @@ const AddItemScreen = () => {
                 />
               )}
             />
-
-            <Octicons
-              name="number"
-              size={24}
-              color={"#4acdcd"}
-              style={{ marginTop: "5%" }}
-            />
-
-            <TextInput
-              placeholder="Quantity"
-              value={quantity}
-              onChangeText={(text) => setQuantity(text)}
-              placeholderTextColor={"#1e546b"}
-              keyboardType="numeric"
-              style={{
-                fontSize: quantity ? 18 : 18,
-                borderBottomWidth: 1,
-                borderBottomColor: "gray",
-                marginLeft: 13,
-                width: 100,
-                marginTop: "5%",
-              }}
-            />
+            {category?.length > 0 && <QuantityComponent itemQuantity={quantity} itemCategory={category} addFoodItemQuantity={() => { setQuantity(q => q + 1) }} minusFoodItemQuantity={() => {
+              if (q > 1) setQuantity(q => q - 1)
+            }} />}
           </View>
 
           <View style={{ flexDirection: "row" }}>
@@ -322,10 +305,10 @@ const AddItemScreen = () => {
                 width: 150,
                 backgroundColor:
                   name === "" ||
-                  calories === "" ||
-                  price === "" ||
-                  category === "" ||
-                  !(expTime instanceof Date)
+                    calories === "" ||
+                    price === "" ||
+                    category === "" ||
+                    !(expTime instanceof Date)
                     ? "red"
                     : "blue",
                 padding: 15,
