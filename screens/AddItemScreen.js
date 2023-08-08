@@ -21,7 +21,7 @@ import { Feather } from "@expo/vector-icons";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import Toast from "react-native-toast-message";
+import Toast from 'react-native-simple-toast';
 import { Octicons } from "@expo/vector-icons";
 import { db } from "../firebase";
 import QuantityComponent from "../components/QuantityComponent";
@@ -71,7 +71,6 @@ const AddItemScreen = () => {
   };
 
   const saveFoodItem = async () => {
-    console.log("saving food item");
     const newFoodItem = {
       name: name,
       expiry: expTime,
@@ -88,12 +87,7 @@ const AddItemScreen = () => {
       newFoodItem
     );
     console.log("food item added", foodItems.id);
-    Toast.show({
-      type: "success",
-      position: "top",
-      text1: "Success",
-      text2: "Food item added successfully",
-    });
+    Toast.show("Food item added successfully");
     navigation.navigate("Home")
   };
 

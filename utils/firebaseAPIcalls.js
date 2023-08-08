@@ -14,5 +14,13 @@ export const getFoodItems = async () => {
         };
     });
 
+    // sort by lattest 
+
+    foodItems.sort((a, b) => {
+        if (a.added > b.added) return -1;
+        if (a.added < b.added) return 1;
+        return 0;
+    });
+
     return foodItems;
 }
