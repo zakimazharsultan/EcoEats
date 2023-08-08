@@ -21,7 +21,7 @@ import { Feather } from "@expo/vector-icons";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import Toast from 'react-native-simple-toast';
+import Toast from "react-native-simple-toast";
 import { Octicons } from "@expo/vector-icons";
 import { db } from "../firebase";
 import QuantityComponent from "../components/QuantityComponent";
@@ -66,7 +66,7 @@ const AddItemScreen = () => {
     setExpTime(new Date(expiryDate));
     setCalories("");
     setPrice("");
-    setQuantity(1)
+    setQuantity(1);
     setCategory("");
   };
 
@@ -88,7 +88,7 @@ const AddItemScreen = () => {
     );
     console.log("food item added", foodItems.id);
     Toast.show("Food item added successfully");
-    navigation.navigate("Home")
+    navigation.navigate("Home");
   };
 
   return (
@@ -270,9 +270,18 @@ const AddItemScreen = () => {
                 />
               )}
             />
-            {category?.length > 0 && <QuantityComponent itemQuantity={quantity} itemCategory={category} addFoodItemQuantity={() => { setQuantity(q => q + 1) }} minusFoodItemQuantity={() => {
-              if (q > 1) setQuantity(q => q - 1)
-            }} />}
+            {category?.length > 0 && (
+              <QuantityComponent
+                itemQuantity={quantity}
+                itemCategory={category}
+                addFoodItemQuantity={() => {
+                  setQuantity((q) => q + 1);
+                }}
+                minusFoodItemQuantity={() => {
+                  if (q > 1) setQuantity((q) => q - 1);
+                }}
+              />
+            )}
           </View>
 
           <View style={{ flexDirection: "row" }}>
@@ -300,12 +309,12 @@ const AddItemScreen = () => {
                 width: 150,
                 backgroundColor:
                   name === "" ||
-                    calories === "" ||
-                    price === "" ||
-                    category === "" ||
-                    !(expTime instanceof Date)
+                  calories === "" ||
+                  price === "" ||
+                  category === "" ||
+                  !(expTime instanceof Date)
                     ? "red"
-                    : "blue",
+                    : "green",
                 padding: 15,
                 borderRadius: 7,
                 marginTop: 40,
@@ -364,9 +373,7 @@ const AddItemScreen = () => {
             borderRadius: 10,
             flex: 1,
           }}
-          onPress={() => {
-            console.log(foodItemsDB);
-          }}
+          onPress={() => navigation.navigate("Meal")}
         >
           <MaterialCommunityIcons
             name="silverware-fork-knife"

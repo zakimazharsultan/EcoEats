@@ -10,6 +10,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import OrderScreen from "./screens/OrderScreen";
 import AddItemScreen from "./screens/AddItemScreen";
+import MealScreen from "./screens/MealScreen";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -54,6 +55,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="AddItem"
           component={AddItemScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Meal"
+          component={MealScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

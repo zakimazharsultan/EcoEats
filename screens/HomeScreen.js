@@ -18,14 +18,20 @@ import FoodItem from "../components/FoodItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Fontisto } from "@expo/vector-icons";
-import { doc, updateDoc, getDoc, increment, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  increment,
+  deleteDoc,
+} from "firebase/firestore";
 import { Entypo } from "@expo/vector-icons";
 import { db } from "../firebase";
 import { foodItems } from "../utils/foodItems";
 import { getFoodItems } from "../utils/firebaseAPIcalls";
 import { ActivityIndicator } from "react-native";
 import { auth } from "../firebase";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -41,9 +47,9 @@ const HomeScreen = () => {
 
   const addFoodItemQuantity = async (id) => {
     try {
-      setFoodItemsDB(prevItems => {
+      setFoodItemsDB((prevItems) => {
         // Find the index of the item with the specified ID
-        const index = prevItems.findIndex(item => item.id === id);
+        const index = prevItems.findIndex((item) => item.id === id);
 
         // If the item doesn't exist, just return the previous state
         if (index === -1) return prevItems;
@@ -52,7 +58,7 @@ const HomeScreen = () => {
         const newItems = [...prevItems];
         newItems[index] = {
           ...newItems[index],
-          quantity: newItems[index].quantity + 1
+          quantity: newItems[index].quantity + 1,
         };
         return newItems;
       });
@@ -68,7 +74,7 @@ const HomeScreen = () => {
 
       // Update the quantity field by incrementing it by 1
       await updateDoc(foodItemRef, {
-        quantity: increment(1)
+        quantity: increment(1),
       });
 
       // console.log("Food item quantity increased by 1");
@@ -79,14 +85,13 @@ const HomeScreen = () => {
       console.error("Error updating quantity: ", error);
     }
     // console.log("adding to: ", id)
-
-  }
+  };
 
   const minusFoodItemQuantity = async (id) => {
     try {
-      setFoodItemsDB(prevItems => {
+      setFoodItemsDB((prevItems) => {
         // Find the index of the item with the specified ID
-        const index = prevItems.findIndex(item => item.id === id);
+        const index = prevItems.findIndex((item) => item.id === id);
 
         // If the item doesn't exist, just return the previous state
         if (index === -1) return prevItems;
@@ -96,7 +101,7 @@ const HomeScreen = () => {
         if (newItems[index].quantity > 1) {
           newItems[index] = {
             ...newItems[index],
-            quantity: newItems[index].quantity - 1
+            quantity: newItems[index].quantity - 1,
           };
         }
 
@@ -114,7 +119,7 @@ const HomeScreen = () => {
 
       // Update the quantity field by incrementing it by 1
       await updateDoc(foodItemRef, {
-        quantity: increment(-1)
+        quantity: increment(-1),
       });
 
       // console.log("Food item quantity increased by 1");
@@ -125,11 +130,10 @@ const HomeScreen = () => {
       console.error("Error updating quantity: ", error);
     }
     // console.log("adding to: ", id)
-
-  }
+  };
 
   const deleteItem = async (id) => {
-    setLoading(true)
+    setLoading(true);
     try {
       const foodItemRef = doc(db, "users", user?.email, "foodItems", id);
 
@@ -140,7 +144,7 @@ const HomeScreen = () => {
     } catch (error) {
       console.error("Error deleting food item: ", error);
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   // const [displayCurrentAddress, setdisplayCurrentAddress] = useState(
@@ -221,7 +225,6 @@ const HomeScreen = () => {
 
       return () => {
         // If you want to run any cleanup or another function when the screen goes out of focus
-
       };
     }, [])
   );
@@ -293,10 +296,22 @@ const HomeScreen = () => {
             <ActivityIndicator size={"large"} color={"red"} />
           </View>
         ) : (
-          foodItemsDB.map((item, index) => <FoodItem item={item} key={index} addFoodItemQuantity={() => { addFoodItemQuantity(item.id) }} deleteItem={() => { deleteItem(item.id) }} minusFoodItemQuantity={() => {
-            if (item.quantity > 1) minusFoodItemQuantity(item.id)
-            else return
-          }} />)
+          foodItemsDB.map((item, index) => (
+            <FoodItem
+              item={item}
+              key={index}
+              addFoodItemQuantity={() => {
+                addFoodItemQuantity(item.id);
+              }}
+              deleteItem={() => {
+                deleteItem(item.id);
+              }}
+              minusFoodItemQuantity={() => {
+                if (item.quantity > 1) minusFoodItemQuantity(item.id);
+                else return;
+              }}
+            />
+          ))
         )}
 
         <View
@@ -348,7 +363,6 @@ const HomeScreen = () => {
             borderRadius: 10,
             flex: 1,
           }}
-        // onPress={() => navigation.navigate("PickUp")}
         >
           <SimpleLineIcons name="basket" size={24} color="white" />
         </Pressable>
@@ -364,9 +378,7 @@ const HomeScreen = () => {
             borderRadius: 10,
             flex: 1,
           }}
-          onPress={() => {
-            console.log(foodItemsDB);
-          }}
+          onPress={() => navigation.navigate("Meal")}
         >
           <MaterialCommunityIcons
             name="silverware-fork-knife"
