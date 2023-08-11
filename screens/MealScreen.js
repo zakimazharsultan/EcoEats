@@ -13,6 +13,27 @@ import { useNavigation } from "@react-navigation/native";
 
 import React from "react";
 
+const fetchData = async (input) => {
+  const response = await axios.post(
+    "https://api.openai.com/v1/completions",
+    {
+      prompt: `Complete this sentence: "${input}"`,
+      model: model,
+      max_tokens: 50,
+      n: 1,
+      stop: ".",
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+      },
+    }
+  );
+
+  return response.data.choices[0].text;
+};
+
 const MealScreen = () => {
   const navigation = useNavigation();
 

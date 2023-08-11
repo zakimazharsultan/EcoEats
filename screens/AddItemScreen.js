@@ -34,6 +34,9 @@ const AddItemScreen = () => {
     { label: "Liquid", value: " ltr" },
     { label: "Vegetables", value: " kg" },
     { label: "Meat", value: " kg" },
+    { label: "Others (ltr)", value: " ltr" },
+    { label: "Others (Kg)", value: " kg" },
+    { label: "Others (Solid)", value: " pcs" },
   ];
   const newDate = new Date();
   const expiryDate = newDate.setDate(newDate.getDate() + 1);
