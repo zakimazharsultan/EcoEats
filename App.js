@@ -4,6 +4,7 @@ import HomeScreen from "./screens/HomeScreen";
 import { Provider } from "react-redux";
 import store from "./store";
 import StackNavigator from "./StackNavigator";
+import "react-native-url-polyfill/auto"
 
 export default function App() {
   return (

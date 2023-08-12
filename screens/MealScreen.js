@@ -10,33 +10,84 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { OPENAI_API_KEY } from "@env";
+import React, { useEffect, useState, useCallback } from "react";
+import { Configuration, OpenAIApi } from "openai";
+import { useFocusEffect } from "@react-navigation/native";
+import { getFoodItems } from "../utils/firebaseAPIcalls";
 
-import React from "react";
+const configuration = new Configuration({
+  apiKey: OPENAI_API_KEY,
+});
+
+const openaiAPI = new OpenAIApi(configuration);
+
 
 const fetchData = async (input) => {
-  const response = await axios.post(
-    "https://api.openai.com/v1/completions",
-    {
-      prompt: `Complete this sentence: "${input}"`,
-      model: model,
-      max_tokens: 50,
-      n: 1,
-      stop: ".",
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-    }
-  );
+  var meal = "no meal found";
+  await openaiAPI.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "system", content: "You are going to provide eco-friendly Meal plans for a day based on the inventory provided. Do not suggest a meal based on any other food item which is not in the inventory." },
+    { role: "user", content: `inventory: ${input}` }],
+  }).then((res) => {
+    // console.log(res.data.choices[0].message.content);
+    meal = res.data.choices[0].message.content;
 
-  return response.data.choices[0].text;
+  }).catch((e) => {
+    console.log(e);
+  });
+
+
+  return meal
 };
 
 const MealScreen = () => {
   const navigation = useNavigation();
+  const [meals, setMeals] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [foodItems, setFoodItems] = useState([]);
 
+  // useEffect(() => {
+  //   const fetchRecipe = async () => {
+  //     const items = await getFoodItems();
+  //     var recipe = "";
+  //     items.forEach((item) => {
+  //       recipe += `${item.quantity} of ${item.name}, `;
+
+  //     });
+  //     setFoodItems(recipe);
+  //     const meals = await fetchData(recipe);
+  //     setMeals(meals);
+  //     setLoading(false);
+  //   };
+
+  //   fetchRecipe();
+  // }, [])
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchRecipe = async () => {
+        setLoading(true);
+        const items = await getFoodItems();
+        var recipe = "";
+        items.forEach((item) => {
+          recipe += `${item.quantity} of ${item.name}, `;
+
+        });
+        setFoodItems(recipe);
+        const meals = await fetchData(recipe);
+        setMeals(meals);
+        setLoading(false);
+      };
+
+      fetchRecipe();
+
+      return () => {
+        // If you want to run any cleanup or another function when the screen goes out of focus
+      };
+    }, [])
+  );
   return (
     <>
       <SafeAreaView
@@ -90,7 +141,7 @@ const MealScreen = () => {
             borderColor: "grey",
           }}
         >
-          <Text>Suggestions</Text>
+          <Text>{loading ? 'loading ...' : meals}</Text>
         </ScrollView>
       </View>
 
