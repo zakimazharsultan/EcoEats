@@ -13,10 +13,13 @@ import * as Location from "expo-location";
 import React, { useEffect, useState } from "react";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import Services from "../components/Services";
 import FoodItem from "../components/FoodItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import {
   doc,
@@ -331,15 +334,15 @@ const HomeScreen = () => {
           <Pressable
             style={{
               backgroundColor: "#088F8F",
-              width: 60,
-              height: 60,
+              width: 55,
+              height: 55,
               borderRadius: 30,
               justifyContent: "center",
               alignItems: "center",
             }}
             onPress={() => navigation.navigate("AddItem")}
           >
-            <Fontisto name="shopping-basket-add" size={24} color="white" />
+            <MaterialIcons name="add" size={32} color="white" />
           </Pressable>
         </View>
       </ScrollView>
@@ -364,7 +367,7 @@ const HomeScreen = () => {
             flex: 1,
           }}
         >
-          <SimpleLineIcons name="basket" size={24} color="white" />
+          <FontAwesome name="shopping-basket" size={24} color="white" />
         </Pressable>
 
         <Pressable
@@ -377,14 +380,11 @@ const HomeScreen = () => {
             alignItems: "center",
             borderRadius: 10,
             flex: 1,
+            flexDirection: "row",
           }}
           onPress={() => navigation.navigate("Meal")}
         >
-          <MaterialCommunityIcons
-            name="silverware-fork-knife"
-            size={24}
-            color="white"
-          />
+          <FontAwesome5 name="robot" size={23} color="white" />
         </Pressable>
       </View>
     </>

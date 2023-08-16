@@ -12,33 +12,40 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { OPENAI_API_KEY } from "@env";
 import React, { useEffect, useState, useCallback } from "react";
+import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { Configuration, OpenAIApi } from "openai";
 import { useFocusEffect } from "@react-navigation/native";
 import { getFoodItems } from "../utils/firebaseAPIcalls";
-
 const configuration = new Configuration({
   apiKey: OPENAI_API_KEY,
 });
 
 const openaiAPI = new OpenAIApi(configuration);
 
-
 const fetchData = async (input) => {
   var meal = "no meal found";
-  await openaiAPI.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [{ role: "system", content: "You are going to provide eco-friendly Meal plans for a day based on the inventory provided. Do not suggest a meal based on any other food item which is not in the inventory." },
-    { role: "user", content: `inventory: ${input}` }],
-  }).then((res) => {
-    // console.log(res.data.choices[0].message.content);
-    meal = res.data.choices[0].message.content;
+  await openaiAPI
+    .createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are going to provide eco-friendly Meal plans for a day based on the inventory provided. Do not suggest a meal based on any other food item which is not in the inventory.",
+        },
+        { role: "user", content: `inventory: ${input}` },
+      ],
+    })
+    .then((res) => {
+      // console.log(res.data.choices[0].message.content);
+      meal = res.data.choices[0].message.content;
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 
-  }).catch((e) => {
-    console.log(e);
-  });
-
-
-  return meal
+  return meal;
 };
 
 const MealScreen = () => {
@@ -64,7 +71,6 @@ const MealScreen = () => {
   //   fetchRecipe();
   // }, [])
 
-
   useFocusEffect(
     React.useCallback(() => {
       const fetchRecipe = async () => {
@@ -73,7 +79,6 @@ const MealScreen = () => {
         var recipe = "";
         items.forEach((item) => {
           recipe += `${item.quantity} of ${item.name}, `;
-
         });
         setFoodItems(recipe);
         const meals = await fetchData(recipe);
@@ -135,13 +140,13 @@ const MealScreen = () => {
           style={{
             margin: 10,
             backgroundColor: "white",
-            height: "70%",
+            height: "71%",
             padding: 2,
             borderWidth: 2,
             borderColor: "grey",
           }}
         >
-          <Text>{loading ? 'loading ...' : meals}</Text>
+          <Text>{loading ? "loading ..." : meals}</Text>
         </ScrollView>
       </View>
 
@@ -166,7 +171,7 @@ const MealScreen = () => {
           }}
           onPress={() => navigation.goBack()}
         >
-          <SimpleLineIcons name="basket" size={24} color="white" />
+          <FontAwesome name="shopping-basket" size={24} color="white" />
         </Pressable>
 
         <Pressable
@@ -181,11 +186,7 @@ const MealScreen = () => {
             flex: 1,
           }}
         >
-          <MaterialCommunityIcons
-            name="silverware-fork-knife"
-            size={24}
-            color="white"
-          />
+          <FontAwesome5 name="robot" size={23} color="white" />
         </Pressable>
       </View>
     </>

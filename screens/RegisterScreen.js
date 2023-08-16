@@ -61,27 +61,37 @@ const RegisterScreen = () => {
           style={{
             justifyContent: "center",
             alignItems: "center",
-            marginTop: 100,
-          }}>
-
-          <Image source={require('../assets/logo.png')} style={{ width: 160, height: 120 }} />
+            marginTop: 30,
+          }}
+        >
+          <Image
+            source={require("../assets/logo.png")}
+            style={{ width: 160, height: 120 }}
+          />
         </View>
         <View
           style={{
             justifyContent: "center",
             alignItems: "center",
-            marginTop: 20,
+            marginTop: 10,
           }}
         >
           <Text style={{ fontSize: 20, color: "#4acdcd", fontWeight: "bold" }}>
             Register
           </Text>
-          <Text style={{ fontSize: 18, marginTop: 8, fontWeight: '500', color: "#4acdcd"  }}>
+          <Text
+            style={{
+              fontSize: 18,
+              marginTop: 6,
+              fontWeight: "500",
+              color: "#4acdcd",
+            }}
+          >
             Create a new Account
           </Text>
         </View>
 
-        <View style={{ marginTop: 50 }}>
+        <View style={{ marginTop: 40 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <MaterialCommunityIcons
               name="email-outline"
@@ -172,30 +182,28 @@ const RegisterScreen = () => {
 
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
+              flexDirection: "row",
+              justifyContent: "center",
               marginTop: 20,
             }}
           >
             <Text
               style={{
-                textAlign: 'center',
+                textAlign: "center",
                 fontSize: 17,
-                color: 'black',
-                fontWeight: '500',
+                color: "black",
+                fontWeight: "500",
               }}
             >
               Already have an account?
             </Text>
-            <Pressable
-              onPress={() => navigation.goBack()}
-            >
+            <Pressable onPress={() => navigation.goBack()}>
               <Text
                 style={{
-                  textAlign: 'center',
+                  textAlign: "center",
                   fontSize: 17,
-                  color: 'blue',
-                  fontWeight: '500',
+                  color: "blue",
+                  fontWeight: "500",
                   marginLeft: 5,
                 }}
               >

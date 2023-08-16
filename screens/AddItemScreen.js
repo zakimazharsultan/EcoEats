@@ -20,6 +20,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
+import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Toast from "react-native-simple-toast";
 import { Octicons } from "@expo/vector-icons";
@@ -251,7 +252,7 @@ const AddItemScreen = () => {
                 borderBottomColor: "gray",
                 borderBottomWidth: 0.5,
               }}
-              placeholderStyle={{ fontSize: 16 }}
+              placeholderStyle={{ fontSize: 14 }}
               selectedTextStyle={{ fontSize: 16 }}
               inputSearchStyle={{ height: 40, fontSize: 16 }}
               iconStyle={{ width: 20, height: 20 }}
@@ -362,7 +363,7 @@ const AddItemScreen = () => {
           }}
           onPress={() => navigation.goBack()}
         >
-          <SimpleLineIcons name="basket" size={24} color="white" />
+          <FontAwesome name="shopping-basket" size={24} color="white" />
         </Pressable>
 
         <Pressable
@@ -378,11 +379,7 @@ const AddItemScreen = () => {
           }}
           onPress={() => navigation.navigate("Meal")}
         >
-          <MaterialCommunityIcons
-            name="silverware-fork-knife"
-            size={24}
-            color="white"
-          />
+          <FontAwesome5 name="robot" size={23} color="white" />
         </Pressable>
       </View>
     </>

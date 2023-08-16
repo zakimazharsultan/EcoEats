@@ -65,10 +65,13 @@ const LoginScreen = () => {
             style={{
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 100,
-            }}>
-
-            <Image source={require('../assets/logo.png')} style={{ width: 160, height: 120 }} />
+              marginTop: 30,
+            }}
+          >
+            <Image
+              source={require("../assets/logo.png")}
+              style={{ width: 160, height: 120 }}
+            />
           </View>
           <View
             style={{
@@ -78,11 +81,18 @@ const LoginScreen = () => {
             }}
           >
             <Text
-              style={{ fontSize: 20, fontWeight: "bold", color: "#4acdcd", }}
+              style={{ fontSize: 20, fontWeight: "bold", color: "#4acdcd" }}
             >
               Sign In
             </Text>
-            <Text style={{ fontSize: 18, marginTop: 8, fontWeight: "600", color: "#4acdcd", }}>
+            <Text
+              style={{
+                fontSize: 18,
+                marginTop: 8,
+                fontWeight: "600",
+                color: "#4acdcd",
+              }}
+            >
               Sign in to your account
             </Text>
           </View>
@@ -156,30 +166,28 @@ const LoginScreen = () => {
 
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
+                flexDirection: "row",
+                justifyContent: "center",
                 marginTop: 20,
               }}
             >
               <Text
                 style={{
-                  textAlign: 'center',
+                  textAlign: "center",
                   fontSize: 17,
-                  color: 'black',
-                  fontWeight: '500',
+                  color: "black",
+                  fontWeight: "500",
                 }}
               >
                 Don't have an account?
               </Text>
-              <Pressable
-                onPress={() => navigation.navigate('Register')}
-              >
+              <Pressable onPress={() => navigation.navigate("Register")}>
                 <Text
                   style={{
-                    textAlign: 'center',
+                    textAlign: "center",
                     fontSize: 17,
-                    color: 'blue',
-                    fontWeight: '500',
+                    color: "blue",
+                    fontWeight: "500",
                     marginLeft: 5,
                   }}
                 >
