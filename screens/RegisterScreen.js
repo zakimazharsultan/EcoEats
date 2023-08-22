@@ -44,6 +44,7 @@ const RegisterScreen = () => {
           email: user,
           phone: phone,
         });
+        navigation.navigate("Intro");
       }
     );
   };
@@ -152,6 +153,7 @@ const RegisterScreen = () => {
               onChangeText={(text) => setPhone(text)}
               placeholder="Phone No"
               placeholderTextColor={"#1e546b"}
+              keyboardType="numeric"
               style={{
                 fontSize: phone ? 18 : 18,
                 borderBottomWidth: 1,

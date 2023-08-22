@@ -1,24 +1,66 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList, Animated } from "react-native";
 import { SliderBox } from "react-native-image-slider-box";
-import React from "react";
+import React, { useState, useRef } from "react";
+import slides from "../slides";
+import CarousalItem from "./CarousalItem";
+import Indicator from "./Indicator";
+import NextButton from "./NextButton";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackView } from "@react-navigation/native-stack";
 
 const Carousal = () => {
-  const images = [
-    "https://media.istockphoto.com/id/1247884083/vector/laundry-service-room-vector-illustration-washing-and-drying-machines-with-cleansers-on-shelf.jpg?s=612x612&w=0&k=20&c=myaNEKlqX7R--bzWGDoMI7PhdxG_zdQTKYEBlymJQGk=",
-    "https://images.pexels.com/photos/5591581/pexels-photo-5591581.jpeg?auto=compress&cs=tinysrgb&w=800",
-  ];
+  const navigation = useNavigation();
+  const scrollX = useRef(new Animated.Value(0)).current;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const slideRef = useRef(null);
+  const viewableItemsChanged = useRef(({ viewableItems }) => {
+    setCurrentIndex(viewableItems[0].index);
+  }).current;
+
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
+  const scrollTo = () => {
+    if (currentIndex < slides.length - 1) {
+      slideRef.current.scrollToIndex({ index: currentIndex + 1 });
+    } else {
+      navigation.navigate("Home");
+    }
+  };
+
   return (
-    <View>
-      <SliderBox
-        images={images}
-        autoPlay
-        circleLoop
-        dotColor={"#13274F"}
-        inactiveDotColor="#90A4AE"
-        ImageComponentStyle={{
-          borderRadius: 6,
-          width: "90%",
-        }}
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <View style={{ flex: 3 }}>
+        <FlatList
+          ref={slideRef}
+          data={slides}
+          renderItem={({ item }) => <CarousalItem item={item} />}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          bounces={false}
+          keyExtractor={(item) => item.id}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            {
+              useNativeDriver: false,
+            }
+          )}
+          scrollEventThrottle={32}
+          viewabilityConfig={viewConfig}
+          onViewableItemsChanged={viewableItemsChanged}
+        />
+      </View>
+      <Indicator data={slides} scrollX={scrollX} />
+      <NextButton
+        scrollTo={scrollTo}
+        percentage={(currentIndex + 1) * (100 / slides.length)}
       />
     </View>
   );

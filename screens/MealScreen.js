@@ -24,6 +24,7 @@ const configuration = new Configuration({
 const openaiAPI = new OpenAIApi(configuration);
 
 const fetchData = async (input) => {
+  console.log(OPENAI_API_KEY);
   var meal = "no meal found";
   await openaiAPI
     .createChatCompletion({

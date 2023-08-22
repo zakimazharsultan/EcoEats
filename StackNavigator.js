@@ -11,6 +11,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import OrderScreen from "./screens/OrderScreen";
 import AddItemScreen from "./screens/AddItemScreen";
 import MealScreen from "./screens/MealScreen";
+import IntroScreen from "./screens/IntroScreen";
 
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
@@ -25,6 +26,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Register"
           component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Intro"
+          component={IntroScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
