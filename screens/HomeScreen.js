@@ -17,6 +17,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Services from "../components/Services";
 import FoodItem from "../components/FoodItem";
 import { useDispatch, useSelector } from "react-redux";
+import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -265,14 +266,17 @@ const HomeScreen = () => {
         </Text>
         <Pressable
           onPress={() => navigation.navigate("Profile")}
-          style={{ marginRight: 5 }}
+          style={{
+            marginRight: 5,
+            width: 30,
+            height: 30,
+            backgroundColor: "grey",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 20,
+          }}
         >
-          <Image
-            style={{ width: 40, height: 40, borderRadius: 20 }}
-            source={{
-              uri: "https://lh3.google.com/u/0/ogw/AGvuzYYgaacrw17YS1gPAV5d67jEPZd_QT7OCc1DqtUr=s32-c-mo",
-            }}
-          ></Image>
+          <Feather name="user" size={20} color="white" />
         </Pressable>
       </SafeAreaView>
       <ScrollView style={{ backgroundColor: "#e1f5ea", flex: 1 }}>

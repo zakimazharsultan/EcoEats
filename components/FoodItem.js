@@ -8,10 +8,15 @@ import {
   incrementQuantity,
 } from "../CartReducer";
 import { decrementQty, incrementQty } from "../ProductReducer";
-import QuantityComponent from "./QuantityComponent"
-import { Alert } from 'react-native';
+import QuantityComponent from "./QuantityComponent";
+import { Alert } from "react-native";
 
-const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem }) => {
+const FoodItem = ({
+  item,
+  addFoodItemQuantity,
+  minusFoodItemQuantity,
+  deleteItem,
+}) => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart.cart);
   const addItemToCart = () => {
@@ -37,7 +42,7 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
       >
         <View>
           <Image
-            style={{ width: 50, height: 50 }}
+            style={{ width: 50, height: 50, marginRight: "4%" }}
             source={{ uri: item.image }}
           />
         </View>
@@ -45,17 +50,17 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
         <View>
           <Text
             style={{
-              width: 83,
-              fontSize: 17,
+              width: 70,
+              fontSize: 15,
               fontWeight: "600",
-              marginBottom: 7,
-              marginLeft: 10,
+              marginBottom: "7%",
+              marginLeft: "5%",
             }}
           >
             {item.name}
           </Text>
           <Text
-            style={{ marginLeft: 10, width: 60, color: "gray", fontSize: 15 }}
+            style={{ marginLeft: "5%", width: 60, color: "gray", fontSize: 15 }}
           >
             £ {item.price}
           </Text>
@@ -63,17 +68,31 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
 
         <View>
           <Text
+            style={{ marginBottom: "10%", fontWeight: "500", fontSize: 14 }}
+          >
+            Quantity: {item.quantity} {item.category}
+          </Text>
+
+          <Text
             style={{
               width: 83,
-              fontSize: 12,
-              fontWeight: "600",
-              marginBottom: 7,
+              fontSize: 10,
+              fontWeight: "500",
+              marginBottom: "5%",
+              color: "green",
             }}
           >
             Calories: {item.calories} kcal
           </Text>
 
-          <Text style={{ width: 60, color: "gray", fontSize: 10 }}>
+          <Text
+            style={{
+              width: 60,
+              color: "gray",
+              fontSize: 11,
+              fontWeight: "600",
+            }}
+          >
             Expiry Date: {readableExpiryDate}
           </Text>
         </View>
@@ -82,31 +101,66 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
 
         <Pressable
           style={{
-            flexDirection: "row",
+            flexDirection: "column",
+            marginLeft: "6%",
           }}
         >
           <Pressable
             onPress={() => {
               Alert.alert(
-                "Delete Food Item",               // Alert title
+                "Delete Food Item", // Alert title
                 "Are you sure you want to delete this food item?", // Alert message
                 [
                   {
                     text: "Cancel",
                     onPress: () => console.log("Deletion cancelled"),
-                    style: "cancel"
+                    style: "cancel",
                   },
                   {
                     text: "OK",
                     onPress: async () => {
-                      deleteItem()
-                    }
-                  }
+                      deleteItem();
+                    },
+                  },
                 ],
-                { cancelable: false }  // If you tap outside the alert, it won't close
+                { cancelable: false } // If you tap outside the alert, it won't close
               );
             }}
             style={{
+              width: 30,
+              height: 30,
+              borderRadius: 13,
+              borderColor: "black",
+              backgroundColor: "#FDC323",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="create" size={15} color="white" />
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              Alert.alert(
+                "Delete Food Item", // Alert title
+                "Are you sure you want to delete this food item?", // Alert message
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Deletion cancelled"),
+                    style: "cancel",
+                  },
+                  {
+                    text: "OK",
+                    onPress: async () => {
+                      deleteItem();
+                    },
+                  },
+                ],
+                { cancelable: false } // If you tap outside the alert, it won't close
+              );
+            }}
+            style={{
+              marginTop: "10%",
               width: 30,
               height: 30,
               borderRadius: 13,
@@ -117,39 +171,6 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
             }}
           >
             <Ionicons name="trash-bin" size={15} color="white" />
-          </Pressable>
-          <Pressable
-            onPress={() => {
-              Alert.alert(
-                "Delete Food Item",               // Alert title
-                "Are you sure you want to delete this food item?", // Alert message
-                [
-                  {
-                    text: "Cancel",
-                    onPress: () => console.log("Deletion cancelled"),
-                    style: "cancel"
-                  },
-                  {
-                    text: "OK",
-                    onPress: async () => {
-                      deleteItem()
-                    }
-                  }
-                ],
-                { cancelable: false }  // If you tap outside the alert, it won't close
-              );
-            }}
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 13,
-              borderColor: "black",
-              backgroundColor: "yellow",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Ionicons name="create" size={15} color="white" />
           </Pressable>
         </Pressable>
       </Pressable>
