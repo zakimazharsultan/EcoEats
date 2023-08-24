@@ -24,7 +24,7 @@ const LoginScreen = () => {
         setLoading(false);
       }
       if (authUser) {
-        navigation.navigate("Home");
+        navigation.navigate("Intro");
       }
     });
 

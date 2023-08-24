@@ -6,6 +6,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   ScrollView,
+  FlatList,
   TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -25,6 +26,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Toast from "react-native-simple-toast";
 import { Octicons } from "@expo/vector-icons";
 import { db } from "../firebase";
+import foodSuggestions from "../utils/foodSuggestions";
 import QuantityComponent from "../components/QuantityComponent";
 
 const AddItemScreen = () => {
@@ -35,14 +37,15 @@ const AddItemScreen = () => {
     { label: "Liquid", value: " ltr" },
     { label: "Vegetables", value: " kg" },
     { label: "Meat", value: " kg" },
-    { label: "Others (ltr)", value: " ltr" },
-    { label: "Others (Kg)", value: " kg" },
-    { label: "Others (Solid)", value: " pcs" },
+    { label: "Others (ltr)", value: " Ltr" },
+    { label: "Others (Kg)", value: " Kg" },
+    { label: "Others (Solid)", value: " Pcs" },
   ];
   const newDate = new Date();
   const expiryDate = newDate.setDate(newDate.getDate() + 1);
   const [value, setValue] = useState(null);
   const [name, setName] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const [expTime, setExpTime] = useState(new Date(expiryDate));
   const [calories, setCalories] = useState("");
   const [price, setPrice] = useState("");
@@ -72,6 +75,25 @@ const AddItemScreen = () => {
     setPrice("");
     setQuantity(1);
     setCategory("");
+  };
+
+  const handleInputChange = (text) => {
+    setName(text);
+    const filteredSuggestions = foodSuggestions.filter((suggestion) =>
+      suggestion.name.toLowerCase().includes(text.toLowerCase())
+    );
+
+    setSuggestions(filteredSuggestions);
+  };
+
+  const handleSuggestionPress = (suggestion) => {
+    console.log("suggestion:", suggestion);
+    setName(suggestion.name);
+    setCalories(suggestion.calories);
+    setPrice(suggestion.price);
+    setCategory(suggestion.category);
+    setImage(suggestion.image);
+    setSuggestions([]);
   };
 
   const saveFoodItem = async () => {
@@ -133,11 +155,16 @@ const AddItemScreen = () => {
           <View
             style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
           >
-            <FontAwesome5 name="user" size={24} color={"#4acdcd"} />
+            <FontAwesome5
+              style={{ marginLeft: "2%" }}
+              name="user"
+              size={24}
+              color={"#4acdcd"}
+            />
             <TextInput
               placeholder="Name"
               value={name}
-              onChangeText={(text) => setName(text)}
+              onChangeText={handleInputChange}
               placeholderTextColor={"#1e546b"}
               style={{
                 fontSize: name ? 18 : 18,
@@ -149,10 +176,37 @@ const AddItemScreen = () => {
               }}
             />
           </View>
+          {suggestions.length > 0 && (
+            <View>
+              {suggestions.map((suggestion) => (
+                <Pressable
+                  key={suggestion.name}
+                  onPress={() => handleSuggestionPress(suggestion)}
+                  style={{
+                    padding: 15,
+                    flex: 1,
+                    borderColor: "black",
+                    borderWidth: 0.7,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+                    {suggestion.name}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          )}
           <View
             style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
           >
-            <AntDesign name="calendar" size={24} color={"#4acdcd"} />
+            <AntDesign
+              style={{ marginLeft: "2%" }}
+              name="calendar"
+              size={24}
+              color={"#4acdcd"}
+            />
 
             {showPicker ? (
               <>
@@ -204,7 +258,12 @@ const AddItemScreen = () => {
           <View
             style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
           >
-            <AntDesign name="copyright" size={24} color={"#4acdcd"} />
+            <AntDesign
+              style={{ marginLeft: "2%" }}
+              name="copyright"
+              size={24}
+              color={"#4acdcd"}
+            />
             <TextInput
               placeholder="Calories (kCal)"
               value={calories}
@@ -224,7 +283,12 @@ const AddItemScreen = () => {
           <View
             style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
           >
-            <Ionicons name="pricetag" size={24} color={"#4acdcd"} />
+            <Ionicons
+              style={{ marginLeft: "2%" }}
+              name="pricetag"
+              size={24}
+              color={"#4acdcd"}
+            />
             <TextInput
               placeholder="Price £"
               value={price}
