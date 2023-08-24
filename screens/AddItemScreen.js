@@ -37,9 +37,9 @@ const AddItemScreen = () => {
     { label: "Liquid", value: " ltr" },
     { label: "Vegetables", value: " kg" },
     { label: "Meat", value: " kg" },
-    { label: "Others (ltr)", value: " Ltr" },
-    { label: "Others (Kg)", value: " Kg" },
-    { label: "Others (Solid)", value: " Pcs" },
+    { label: "Others (ltr)", value: " ltr" },
+    { label: "Others (Kg)", value: " kg" },
+    { label: "Others (Solid)", value: " pcs" },
   ];
   const newDate = new Date();
   const expiryDate = newDate.setDate(newDate.getDate() + 1);
@@ -54,7 +54,7 @@ const AddItemScreen = () => {
   const [image, setImage] = useState(
     "https://cdn.icon-icons.com/icons2/3277/PNG/512/salad_bowl_food_vegetables_vegan_healthy_food_icon_208011.png"
   );
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState("");
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
   };
@@ -73,7 +73,7 @@ const AddItemScreen = () => {
     setExpTime(new Date(expiryDate));
     setCalories("");
     setPrice("");
-    setQuantity(1);
+    setQuantity("");
     setCategory("");
   };
 
@@ -102,9 +102,9 @@ const AddItemScreen = () => {
       expiry: expTime,
       calories: calories,
       price: price,
-      category: value,
+      category: category,
       image: image,
-      quantity: quantity,
+      quantity: parseFloat(quantity),
       added: serverTimestamp(),
     };
     console.log(newFoodItem);
@@ -328,6 +328,13 @@ const AddItemScreen = () => {
               value={category}
               onChange={(item) => {
                 setCategory(item.value);
+                // console.log(item.value)
+                if (item.value == " pcs") {
+                  setQuantity(1)
+                  console.log(item.value)
+                } else {
+                  setQuantity("")
+                }
               }}
               renderLeftIcon={() => (
                 <Feather
@@ -338,18 +345,47 @@ const AddItemScreen = () => {
                 />
               )}
             />
-            {category?.length > 0 && (
-              <QuantityComponent
-                itemQuantity={quantity}
-                itemCategory={category}
-                addFoodItemQuantity={() => {
-                  setQuantity((q) => q + 1);
-                }}
-                minusFoodItemQuantity={() => {
-                  if (q > 1) setQuantity((q) => q - 1);
-                }}
-              />
-            )}
+            {category?.length > 1 && <>
+
+              {category === " pcs" ? (
+                <QuantityComponent
+                  itemQuantity={quantity}
+                  itemCategory={category}
+                  addFoodItemQuantity={() => {
+                    setQuantity((q) => q + 1);
+                  }}
+                  minusFoodItemQuantity={() => {
+                    if (quantity > 1) setQuantity((q) => q - 1);
+                  }}
+                />
+              ) : (
+                <>
+                  <TextInput
+                    placeholder="0.0"
+                    value={quantity ? quantity.toString() : ""}
+                    onChangeText={(text) => setQuantity(text)}
+                    placeholderTextColor={"#1e546b"}
+                    keyboardType="numeric"
+                    style={{
+                      fontSize: 18,
+                      marginLeft: 13,
+                      marginVertical: 10,
+                      width: 60,
+                    }}
+                  />
+                  <Text
+                    style={{ marginLeft: 2, fontSize: 18, textAlign: "center", color: "black" }}
+                  >
+                    {category}
+                  </Text>
+                </>
+
+
+              )}
+            </>
+            }
+
+
           </View>
 
           <View style={{ flexDirection: "row" }}>
@@ -377,10 +413,10 @@ const AddItemScreen = () => {
                 width: 150,
                 backgroundColor:
                   name === "" ||
-                  calories === "" ||
-                  price === "" ||
-                  category === "" ||
-                  !(expTime instanceof Date)
+                    calories === "" ||
+                    price === "" ||
+                    category === "" ||
+                    !(expTime instanceof Date)
                     ? "red"
                     : "green",
                 padding: 15,

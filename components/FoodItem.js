@@ -78,9 +78,13 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
           </Text>
         </View>
 
-        <QuantityComponent itemCategory={item.category} itemQuantity={item.quantity} addFoodItemQuantity={addFoodItemQuantity} minusFoodItemQuantity={minusFoodItemQuantity} />
+        {/* <QuantityComponent itemCategory={item.category} itemQuantity={item.quantity} addFoodItemQuantity={addFoodItemQuantity} minusFoodItemQuantity={minusFoodItemQuantity} /> */}
 
-        <Pressable>
+        <Pressable
+          style={{
+            flexDirection: "row",
+          }}
+        >
           <Pressable
             onPress={() => {
               Alert.alert(
@@ -103,9 +107,8 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
               );
             }}
             style={{
-              width: 20,
-              height: 20,
-              bottom: "45%",
+              width: 30,
+              height: 30,
               borderRadius: 13,
               borderColor: "black",
               backgroundColor: "red",
@@ -114,6 +117,39 @@ const FoodItem = ({ item, addFoodItemQuantity, minusFoodItemQuantity, deleteItem
             }}
           >
             <Ionicons name="trash-bin" size={15} color="white" />
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              Alert.alert(
+                "Delete Food Item",               // Alert title
+                "Are you sure you want to delete this food item?", // Alert message
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Deletion cancelled"),
+                    style: "cancel"
+                  },
+                  {
+                    text: "OK",
+                    onPress: async () => {
+                      deleteItem()
+                    }
+                  }
+                ],
+                { cancelable: false }  // If you tap outside the alert, it won't close
+              );
+            }}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 13,
+              borderColor: "black",
+              backgroundColor: "yellow",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="create" size={15} color="white" />
           </Pressable>
         </Pressable>
       </Pressable>
