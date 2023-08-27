@@ -7,6 +7,7 @@ import Indicator from "./Indicator";
 import NextButton from "./NextButton";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackView } from "@react-navigation/native-stack";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Carousal = () => {
   const navigation = useNavigation();
@@ -36,7 +37,19 @@ const Carousal = () => {
         alignItems: "center",
       }}
     >
-      <View style={{ flex: 3 }}>
+      <SafeAreaView>
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "800",
+            color: "orange",
+            fontStyle: "italic",
+          }}
+        >
+          HOW TO USE ?
+        </Text>
+      </SafeAreaView>
+      <View style={{ flex: 3, marginTop: "5%" }}>
         <FlatList
           ref={slideRef}
           data={slides}

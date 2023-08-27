@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { OPENAI_API_KEY } from "@env";
 import React, { useEffect, useState, useCallback } from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Configuration, OpenAIApi } from "openai";
 import { useFocusEffect } from "@react-navigation/native";
@@ -116,14 +117,17 @@ const MealScreen = () => {
         </Text>
         <Pressable
           onPress={() => navigation.navigate("Profile")}
-          style={{ marginRight: 5 }}
+          style={{
+            marginRight: 5,
+            width: 34,
+            height: 34,
+            backgroundColor: "grey",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 20,
+          }}
         >
-          <Image
-            style={{ width: 40, height: 40, borderRadius: 20 }}
-            source={{
-              uri: "https://lh3.google.com/u/0/ogw/AGvuzYYgaacrw17YS1gPAV5d67jEPZd_QT7OCc1DqtUr=s32-c-mo",
-            }}
-          ></Image>
+          <Feather name="user" size={20} color="white" />
         </Pressable>
       </SafeAreaView>
 

@@ -83,6 +83,8 @@ const AddItemScreen = () => {
       suggestion.name.toLowerCase().includes(text.toLowerCase())
     );
 
+    // const limitedSuggestions = filteredSuggestions.slice(0, 6);
+
     setSuggestions(filteredSuggestions);
   };
 
@@ -139,14 +141,17 @@ const AddItemScreen = () => {
         </Text>
         <Pressable
           onPress={() => navigation.navigate("Profile")}
-          style={{ marginRight: 5 }}
+          style={{
+            marginRight: 5,
+            width: 34,
+            height: 34,
+            backgroundColor: "grey",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 20,
+          }}
         >
-          <Image
-            style={{ width: 40, height: 40, borderRadius: 20 }}
-            source={{
-              uri: "https://lh3.google.com/u/0/ogw/AGvuzYYgaacrw17YS1gPAV5d67jEPZd_QT7OCc1DqtUr=s32-c-mo",
-            }}
-          ></Image>
+          <Feather name="user" size={20} color="white" />
         </Pressable>
       </SafeAreaView>
 
@@ -177,7 +182,14 @@ const AddItemScreen = () => {
             />
           </View>
           {suggestions.length > 0 && (
-            <View>
+            <View
+              style={{
+                width: "82%",
+                justifyContent: "center",
+                alignContent: "center",
+                marginLeft: "12%",
+              }}
+            >
               {suggestions.map((suggestion) => (
                 <Pressable
                   key={suggestion.name}
@@ -330,10 +342,10 @@ const AddItemScreen = () => {
                 setCategory(item.value);
                 // console.log(item.value)
                 if (item.value == " pcs") {
-                  setQuantity(1)
-                  console.log(item.value)
+                  setQuantity(1);
+                  console.log(item.value);
                 } else {
-                  setQuantity("")
+                  setQuantity("");
                 }
               }}
               renderLeftIcon={() => (
@@ -345,47 +357,48 @@ const AddItemScreen = () => {
                 />
               )}
             />
-            {category?.length > 1 && <>
-
-              {category === " pcs" ? (
-                <QuantityComponent
-                  itemQuantity={quantity}
-                  itemCategory={category}
-                  addFoodItemQuantity={() => {
-                    setQuantity((q) => q + 1);
-                  }}
-                  minusFoodItemQuantity={() => {
-                    if (quantity > 1) setQuantity((q) => q - 1);
-                  }}
-                />
-              ) : (
-                <>
-                  <TextInput
-                    placeholder="0.0"
-                    value={quantity ? quantity.toString() : ""}
-                    onChangeText={(text) => setQuantity(text)}
-                    placeholderTextColor={"#1e546b"}
-                    keyboardType="numeric"
-                    style={{
-                      fontSize: 18,
-                      marginLeft: 13,
-                      marginVertical: 10,
-                      width: 60,
+            {category?.length > 1 && (
+              <>
+                {category === " pcs" ? (
+                  <QuantityComponent
+                    itemQuantity={quantity}
+                    itemCategory={category}
+                    addFoodItemQuantity={() => {
+                      setQuantity((q) => q + 1);
+                    }}
+                    minusFoodItemQuantity={() => {
+                      if (quantity > 1) setQuantity((q) => q - 1);
                     }}
                   />
-                  <Text
-                    style={{ marginLeft: 2, fontSize: 18, textAlign: "center", color: "black" }}
-                  >
-                    {category}
-                  </Text>
-                </>
-
-
-              )}
-            </>
-            }
-
-
+                ) : (
+                  <>
+                    <TextInput
+                      placeholder="0.0"
+                      value={quantity ? quantity.toString() : ""}
+                      onChangeText={(text) => setQuantity(text)}
+                      placeholderTextColor={"#1e546b"}
+                      keyboardType="numeric"
+                      style={{
+                        fontSize: 18,
+                        marginLeft: 13,
+                        marginVertical: 10,
+                        width: 60,
+                      }}
+                    />
+                    <Text
+                      style={{
+                        marginLeft: 2,
+                        fontSize: 18,
+                        textAlign: "center",
+                        color: "black",
+                      }}
+                    >
+                      {category}
+                    </Text>
+                  </>
+                )}
+              </>
+            )}
           </View>
 
           <View style={{ flexDirection: "row" }}>
@@ -413,10 +426,10 @@ const AddItemScreen = () => {
                 width: 150,
                 backgroundColor:
                   name === "" ||
-                    calories === "" ||
-                    price === "" ||
-                    category === "" ||
-                    !(expTime instanceof Date)
+                  calories === "" ||
+                  price === "" ||
+                  category === "" ||
+                  !(expTime instanceof Date)
                     ? "red"
                     : "green",
                 padding: 15,

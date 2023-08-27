@@ -22,12 +22,35 @@ const ProfileScreen = () => {
     <SafeAreaView
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
-      <Pressable style={{ marginVertical: 10 }}>
-        <Text>Welcome {user.email}</Text>
+      <Pressable
+        style={{
+          marginVertical: 10,
+          marginBottom: "30%",
+          backgroundColor: "green",
+          padding: 20,
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: "white",
+            fontSize: 18,
+            fontWeight: "600",
+            borderRadius: 10,
+          }}
+        >
+          Welcome {user.email}
+        </Text>
       </Pressable>
 
-      <Pressable onPress={signOutUser}>
-        <Text>Sign Out</Text>
+      <Pressable
+        onPress={signOutUser}
+        style={{ backgroundColor: "red", padding: 25, borderRadius: 15 }}
+      >
+        <Text style={{ color: "white", fontSize: 16, fontWeight: "800" }}>
+          Sign Out
+        </Text>
       </Pressable>
     </SafeAreaView>
   );

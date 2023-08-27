@@ -11,7 +11,7 @@ import React from "react";
 const CarousalItem = ({ item }) => {
   const { width } = useWindowDimensions();
   return (
-    <SafeAreaView style={[{ flex: 1, justifyContent: "center" }, { width }]}>
+    <View style={[{ flex: 1, justifyContent: "center" }, { width }]}>
       <Image
         source={item.image}
         style={[
@@ -23,8 +23,9 @@ const CarousalItem = ({ item }) => {
       <View style={{ flex: 0.3 }}>
         <Text
           style={{
-            fontWeight: "800",
-            fontSize: 28,
+            fontWeight: "600",
+            fontSize: 26,
+            marginTop: "4%",
             marginBottom: 10,
             color: "black",
             textAlign: "center",
@@ -36,6 +37,7 @@ const CarousalItem = ({ item }) => {
           style={{
             color: "black",
             textAlign: "center",
+            fontSize: 14,
             fontWeight: "300",
             paddingHorizontal: 64,
           }}
@@ -43,7 +45,7 @@ const CarousalItem = ({ item }) => {
           {item.description}
         </Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

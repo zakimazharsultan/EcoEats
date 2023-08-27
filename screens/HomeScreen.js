@@ -268,8 +268,8 @@ const HomeScreen = () => {
           onPress={() => navigation.navigate("Profile")}
           style={{
             marginRight: 5,
-            width: 30,
-            height: 30,
+            width: 34,
+            height: 34,
             backgroundColor: "grey",
             alignItems: "center",
             justifyContent: "center",
