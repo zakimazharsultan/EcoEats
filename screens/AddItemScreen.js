@@ -29,7 +29,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Toast from "react-native-simple-toast";
-import { Octicons } from "@expo/vector-icons";
+// import { Octicons } from "@expo/vector-icons";
 import { db } from "../firebase";
 import foodSuggestions from "../utils/foodSuggestions";
 import QuantityComponent from "../components/QuantityComponent";

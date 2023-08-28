@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { ActivityIndicator, Image } from "react-native";
+import Toast from "react-native-simple-toast";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -32,12 +33,25 @@ const LoginScreen = () => {
   }, []);
 
   const login = () => {
-    signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-      console.log("user credential", userCredential);
-      const user = userCredential.user;
-      console.log("user details", user);
-    });
+    try {
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          console.log("user credential", userCredential);
+          const user = userCredential.user;
+          console.log("user details", user);
+        })
+        .catch(() => {
+          // Handle the error here
+          Toast.show("Wrong Email or Password");
+        });
+    }
+    catch (error) {
+      Toast.show("Wrong Email or Password");
+
+    }
   };
+
   return (
     <SafeAreaView
       style={{

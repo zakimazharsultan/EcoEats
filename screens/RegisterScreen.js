@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
+import Toast from "react-native-simple-toast";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -25,14 +26,7 @@ const RegisterScreen = () => {
 
   const register = () => {
     if (email === "" || password === "" || phone === "") {
-      Alert.alert("Invalid Details", "Please fill all the details", [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        { text: "OK", onPress: () => console.log("OK Pressed") },
-      ]);
+      return Alert.alert("Please fill all the fields");
     }
     createUserWithEmailAndPassword(auth, email, password).then(
       (userCredential) => {
@@ -46,7 +40,10 @@ const RegisterScreen = () => {
         });
         navigation.navigate("Intro");
       }
-    );
+    ).catch((error) => {
+      // Handle the error here
+      Toast.show("Error: ", error);
+    });;
   };
   return (
     <SafeAreaView
