@@ -15,7 +15,7 @@ export const foodItems = [
     name: "Milk",
     added: 1689764776870,
     expiry: 1689764776870 + 14 * 24 * 60 * 60 * 1000, // +14 days from now
-    calories: 103,
+    calories: 650,
     price: 0.45,
     image: "https://cdn-icons-png.flaticon.com/128/869/869460.png",
     category: "liquid",

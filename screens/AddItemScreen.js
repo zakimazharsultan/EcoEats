@@ -10,14 +10,13 @@ import {
   TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp, doc, updateDoc } from "firebase/firestore";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { SimpleLineIcons } from "@expo/vector-icons";
+// import { SimpleLineIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
@@ -29,8 +28,9 @@ import { db } from "../firebase";
 import foodSuggestions from "../utils/foodSuggestions";
 import QuantityComponent from "../components/QuantityComponent";
 
-const AddItemScreen = () => {
+const AddItemScreen = ({ route }) => {
   const user = auth.currentUser;
+  const [isEditing, setIsEditing] = useState(false);
   const navigation = useNavigation();
   const categories = [
     { label: "Fruits", value: " pcs" },
@@ -102,7 +102,7 @@ const AddItemScreen = () => {
     const newFoodItem = {
       name: name,
       expiry: expTime,
-      calories: calories,
+      calories: parseFloat(calories) * parseFloat(quantity),
       price: price,
       category: category,
       image: image,
@@ -110,14 +110,48 @@ const AddItemScreen = () => {
       added: serverTimestamp(),
     };
     console.log(newFoodItem);
-    const foodItems = await addDoc(
-      collection(db, "users", user?.email, "foodItems"),
-      newFoodItem
-    );
-    console.log("food item added", foodItems.id);
-    Toast.show("Food item added successfully");
-    navigation.navigate("Home");
+    if (isEditing) {
+      const foodItemId = route.params.foodItem?.id;
+      if (foodItemId) {
+        const foodItemRef = doc(db, "users", user?.email, "foodItems", foodItemId);
+        const updatedItem = await updateDoc(foodItemRef, newFoodItem);
+        console.log("food item edited");
+        Toast.show("Food item edited successfully");
+        navigation.navigate("Home");
+      }
+
+    } else {
+
+      const foodItems = await addDoc(
+        collection(db, "users", user?.email, "foodItems"),
+        newFoodItem
+      );
+      console.log("food item added", foodItems.id);
+      Toast.show("Food item added successfully");
+      navigation.navigate("Home");
+    }
   };
+
+  useEffect(() => {
+    if (route.params?.foodItem) {
+      const foodItem = route.params.foodItem;
+      const expiryTimestamp = foodItem.expiry.seconds * 1000;
+      const expiryDate = new Date(expiryTimestamp);
+      console.log('edit: ', foodItem)
+      console.log('e: ', expiryDate)
+      setIsEditing(true);
+      setName(foodItem.name);
+      setExpTime(expiryDate);
+      setCalories(foodItem.calories.toString());
+      setPrice(foodItem.price);
+      setCategory(foodItem.category);
+      setImage(foodItem.image);
+      setQuantity(foodItem.quantity);
+      setSuggestions([]);
+
+      // Fetch data from Firebase using the provided ID and populate the form fields
+    }
+  }, []);
 
   return (
     <>
@@ -137,7 +171,7 @@ const AddItemScreen = () => {
           />
         </View>
         <Text style={{ fontSize: 25, fontWeight: "bold", color: "#4acdcd" }}>
-          Add Food Item
+          {isEditing ? "Edit" : "Add"} Food Item
         </Text>
         <Pressable
           onPress={() => navigation.navigate("Profile")}
@@ -166,22 +200,38 @@ const AddItemScreen = () => {
               size={24}
               color={"#4acdcd"}
             />
-            <TextInput
-              placeholder="Name"
-              value={name}
-              onChangeText={handleInputChange}
-              placeholderTextColor={"#1e546b"}
-              style={{
-                fontSize: name ? 18 : 18,
-                borderBottomWidth: 1,
-                borderBottomColor: "gray",
-                marginLeft: 13,
-                marginVertical: 10,
-                width: 300,
-              }}
-            />
+            {
+              isEditing ?
+                <Text
+                  style={{
+                    fontSize: name ? 18 : 18,
+                    color: "gray",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "gray",
+                    marginLeft: 13,
+                    marginVertical: 10,
+                    width: 300,
+                  }}
+                >
+                  {name}
+                </Text> : <TextInput
+                  placeholder="Food Item Name"
+                  value={name}
+                  onChangeText={handleInputChange}
+                  placeholderTextColor={"#1e546b"}
+                  style={{
+                    fontSize: name ? 18 : 18,
+                    borderBottomWidth: 1,
+                    borderBottomColor: "gray",
+                    marginLeft: 13,
+                    marginVertical: 10,
+                    width: 300,
+                  }}
+                />
+            }
+
           </View>
-          {suggestions.length > 0 && (
+          {!isEditing && suggestions.length > 0 && (
             <View
               style={{
                 width: "82%",
@@ -277,7 +327,7 @@ const AddItemScreen = () => {
               color={"#4acdcd"}
             />
             <TextInput
-              placeholder="Calories (kCal)"
+              placeholder="Calories (per unit)"
               value={calories}
               onChangeText={(text) => setCalories(text)}
               placeholderTextColor={"#1e546b"}
@@ -426,10 +476,10 @@ const AddItemScreen = () => {
                 width: 150,
                 backgroundColor:
                   name === "" ||
-                  calories === "" ||
-                  price === "" ||
-                  category === "" ||
-                  !(expTime instanceof Date)
+                    calories === "" ||
+                    price === "" ||
+                    category === "" ||
+                    !(expTime instanceof Date)
                     ? "red"
                     : "green",
                 padding: 15,
@@ -442,14 +492,16 @@ const AddItemScreen = () => {
                 name === "" ||
                 calories === "" ||
                 price === "" ||
-                category === ""
+                category === "" ||
+                quantity === "" ||
+                parseFloat(quantity) <= 0
               }
               onPress={saveFoodItem}
             >
               <Text
                 style={{ fontSize: 18, textAlign: "center", color: "white" }}
               >
-                Add
+                {isEditing ? "Save" : "Add"}
               </Text>
             </Pressable>
           </View>

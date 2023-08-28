@@ -18,6 +18,9 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Configuration, OpenAIApi } from "openai";
 import { useFocusEffect } from "@react-navigation/native";
 import { getFoodItems } from "../utils/firebaseAPIcalls";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { auth } from "../firebase";
+import { db } from "../firebase";
 const configuration = new Configuration({
   apiKey: OPENAI_API_KEY,
 });
@@ -25,7 +28,6 @@ const configuration = new Configuration({
 const openaiAPI = new OpenAIApi(configuration);
 
 const fetchData = async (input) => {
-  console.log(OPENAI_API_KEY);
   var meal = "no meal found";
   await openaiAPI
     .createChatCompletion({
@@ -51,6 +53,7 @@ const fetchData = async (input) => {
 };
 
 const MealScreen = () => {
+  const user = auth.currentUser;
   const navigation = useNavigation();
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,12 +83,23 @@ const MealScreen = () => {
         const items = await getFoodItems();
         var recipe = "";
         items.forEach((item) => {
-          recipe += `${item.quantity} of ${item.name}, `;
+          recipe += `${item.quantity} of ${item.name} worth ${item.calories} calories, `;
         });
         setFoodItems(recipe);
         const meals = await fetchData(recipe);
+
         setMeals(meals);
         setLoading(false);
+        const saveRecipe = {
+          'FoodItems': recipe,
+          'Meal': meals
+        }
+
+        await addDoc(
+          collection(db, "users", user?.email, "Recipes"),
+          saveRecipe
+        )
+
       };
 
       fetchRecipe();

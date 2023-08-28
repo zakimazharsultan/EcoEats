@@ -15,7 +15,7 @@ export default [
   },
   {
     name: "Milk",
-    calories: "103",
+    calories: "660",
     price: "0.45",
     image: "https://cdn-icons-png.flaticon.com/128/869/869460.png",
     category: "ltr",

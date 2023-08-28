@@ -38,6 +38,7 @@ import { auth } from "../firebase";
 import { useFocusEffect } from "@react-navigation/native";
 
 const HomeScreen = () => {
+  const dayToday = new Date();
   const cart = useSelector((state) => state.cart.cart);
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -307,16 +308,20 @@ const HomeScreen = () => {
             <FoodItem
               item={item}
               key={index}
-              addFoodItemQuantity={() => {
-                addFoodItemQuantity(item.id);
-              }}
+              // addFoodItemQuantity={() => {
+              //   addFoodItemQuantity(item.id);
+              // }}
               deleteItem={() => {
                 deleteItem(item.id);
               }}
-              minusFoodItemQuantity={() => {
-                if (item.quantity > 1) minusFoodItemQuantity(item.id);
-                else return;
+              editItem={() => { 
+                navigation.navigate("AddItem", { foodItem: item });
               }}
+              dayToday={dayToday}
+              // minusFoodItemQuantity={() => {
+              //   if (item.quantity > 1) minusFoodItemQuantity(item.id);
+              //   else return;
+              // }}
             />
           ))
         )}
