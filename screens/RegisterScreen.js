@@ -28,10 +28,12 @@ const RegisterScreen = () => {
     if (email === "" || password === "" || phone === "") {
       return Alert.alert("Please fill all the fields");
     }
-    createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
-        console.log("user credential", userCredential);
-        const user = userCredential._tokenResponse.email;
+    try {
+      
+      createUserWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          console.log("user credential", userCredential);
+          const user = userCredential._tokenResponse.email;
         const myUserUid = auth.currentUser.uid;
 
         setDoc(doc(db, "users", `${myUserUid}`), {
@@ -40,10 +42,13 @@ const RegisterScreen = () => {
         });
         navigation.navigate("Intro");
       }
-    ).catch((error) => {
-      // Handle the error here
-      Toast.show("Error: ", error);
-    });;
+      ).catch((error) => {
+        // Handle the error here
+        Toast.show("Error Format");
+      });;
+    } catch (error) {
+      Toast.show("Error Format");
+    }
   };
   return (
     <SafeAreaView
