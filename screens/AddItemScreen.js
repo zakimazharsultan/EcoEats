@@ -10,7 +10,13 @@ import {
   TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { addDoc, collection, serverTimestamp, doc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Ionicons } from "@expo/vector-icons";
@@ -113,15 +119,19 @@ const AddItemScreen = ({ route }) => {
     if (isEditing) {
       const foodItemId = route.params.foodItem?.id;
       if (foodItemId) {
-        const foodItemRef = doc(db, "users", user?.email, "foodItems", foodItemId);
+        const foodItemRef = doc(
+          db,
+          "users",
+          user?.email,
+          "foodItems",
+          foodItemId
+        );
         const updatedItem = await updateDoc(foodItemRef, newFoodItem);
         console.log("food item edited");
         Toast.show("Food item edited successfully");
         navigation.navigate("Home");
       }
-
     } else {
-
       const foodItems = await addDoc(
         collection(db, "users", user?.email, "foodItems"),
         newFoodItem
@@ -137,8 +147,8 @@ const AddItemScreen = ({ route }) => {
       const foodItem = route.params.foodItem;
       const expiryTimestamp = foodItem.expiry.seconds * 1000;
       const expiryDate = new Date(expiryTimestamp);
-      console.log('edit: ', foodItem)
-      console.log('e: ', expiryDate)
+      console.log("edit: ", foodItem);
+      console.log("e: ", expiryDate);
       setIsEditing(true);
       setName(foodItem.name);
       setExpTime(expiryDate);
@@ -200,36 +210,36 @@ const AddItemScreen = ({ route }) => {
               size={24}
               color={"#4acdcd"}
             />
-            {
-              isEditing ?
-                <Text
-                  style={{
-                    fontSize: name ? 18 : 18,
-                    color: "gray",
-                    borderBottomWidth: 1,
-                    borderBottomColor: "gray",
-                    marginLeft: 13,
-                    marginVertical: 10,
-                    width: 300,
-                  }}
-                >
-                  {name}
-                </Text> : <TextInput
-                  placeholder="Food Item Name"
-                  value={name}
-                  onChangeText={handleInputChange}
-                  placeholderTextColor={"#1e546b"}
-                  style={{
-                    fontSize: name ? 18 : 18,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "gray",
-                    marginLeft: 13,
-                    marginVertical: 10,
-                    width: 300,
-                  }}
-                />
-            }
-
+            {isEditing ? (
+              <Text
+                style={{
+                  fontSize: name ? 18 : 18,
+                  color: "gray",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "gray",
+                  marginLeft: 13,
+                  marginVertical: 10,
+                  width: 300,
+                }}
+              >
+                {name}
+              </Text>
+            ) : (
+              <TextInput
+                placeholder="Food Item Name"
+                value={name}
+                onChangeText={handleInputChange}
+                placeholderTextColor={"#1e546b"}
+                style={{
+                  fontSize: name ? 18 : 18,
+                  borderBottomWidth: 1,
+                  borderBottomColor: "gray",
+                  marginLeft: 13,
+                  marginVertical: 10,
+                  width: 300,
+                }}
+              />
+            )}
           </View>
           {!isEditing && suggestions.length > 0 && (
             <View
@@ -476,10 +486,11 @@ const AddItemScreen = ({ route }) => {
                 width: 150,
                 backgroundColor:
                   name === "" ||
-                    calories === "" ||
-                    price === "" ||
-                    category === "" ||
-                    !(expTime instanceof Date)
+                  calories === "" ||
+                  price === "" ||
+                  category === "" ||
+                  quantity === "" ||
+                  !(expTime instanceof Date)
                     ? "red"
                     : "green",
                 padding: 15,
