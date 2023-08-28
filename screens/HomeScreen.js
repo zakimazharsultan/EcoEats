@@ -308,9 +308,7 @@ const HomeScreen = () => {
             <FoodItem
               item={item}
               key={index}
-              // addFoodItemQuantity={() => {
-              //   addFoodItemQuantity(item.id);
-              // }}
+              index={index}
               deleteItem={() => {
                 deleteItem(item.id);
               }}
@@ -318,10 +316,6 @@ const HomeScreen = () => {
                 navigation.navigate("AddItem", { foodItem: item });
               }}
               dayToday={dayToday}
-              // minusFoodItemQuantity={() => {
-              //   if (item.quantity > 1) minusFoodItemQuantity(item.id);
-              //   else return;
-              // }}
             />
           ))
         )}

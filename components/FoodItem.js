@@ -6,6 +6,7 @@ import { Alert } from "react-native";
 
 const FoodItem = ({
   item,
+  index,
   deleteItem,
   editItem,
   dayToday
@@ -21,12 +22,16 @@ const FoodItem = ({
   // const readableExpiryTime = expiryDate.toLocaleTimeString();
   useEffect(() => {
     if (differenceInDays < 0) {
-      showMessage({
-        message: `${item.name} is expired!`,
-        description: `Item added on ${readableAddedDate} has expired since ${Math.ceil(Math.abs(differenceInDays))} days!`,
-        type: "danger",
-        // backgroundColor: "red",
-      });
+      const delayDuration = index * 3000;
+      setTimeout(() => {
+        showMessage({
+          message: `${item.name} is expired!`,
+          description: `Item added on ${readableAddedDate} has expired since ${Math.ceil(Math.abs(differenceInDays))} days!`,
+          type: "danger",
+          hold: 5000,
+        });
+      }, delayDuration);
+
     }
   }, [])
   return (
